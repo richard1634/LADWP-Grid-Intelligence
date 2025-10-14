@@ -1,0 +1,259 @@
+{
+  "generated_at": "2025-10-14T12:22:48.465399",
+  "forecast_points": 28,
+  "anomaly_count": 25,
+  "predictions": [
+    {
+      "timestamp": "2025-10-14T13:00:00-07:00",
+      "demand_mw": 2235.24,
+      "is_anomaly": true,
+      "anomaly_score": -0.5787354736610113,
+      "severity": "medium",
+      "confidence": 57.87354736610113,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T14:00:00-07:00",
+      "demand_mw": 2267.11,
+      "is_anomaly": true,
+      "anomaly_score": -0.5701435244021855,
+      "severity": "medium",
+      "confidence": 57.01435244021855,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T15:00:00-07:00",
+      "demand_mw": 2312.21,
+      "is_anomaly": true,
+      "anomaly_score": -0.5613846529193061,
+      "severity": "medium",
+      "confidence": 56.13846529193061,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T16:00:00-07:00",
+      "demand_mw": 2326.53,
+      "is_anomaly": true,
+      "anomaly_score": -0.5710027477062309,
+      "severity": "medium",
+      "confidence": 57.100274770623095,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T17:00:00-07:00",
+      "demand_mw": 2269.42,
+      "is_anomaly": true,
+      "anomaly_score": -0.5683828927480605,
+      "severity": "medium",
+      "confidence": 56.83828927480605,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T18:00:00-07:00",
+      "demand_mw": 2359.74,
+      "is_anomaly": true,
+      "anomaly_score": -0.5832059542920908,
+      "severity": "medium",
+      "confidence": 58.32059542920908,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T19:00:00-07:00",
+      "demand_mw": 2461.75,
+      "is_anomaly": true,
+      "anomaly_score": -0.588524282145315,
+      "severity": "medium",
+      "confidence": 58.85242821453151,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T20:00:00-07:00",
+      "demand_mw": 2435.54,
+      "is_anomaly": true,
+      "anomaly_score": -0.5676738492823941,
+      "severity": "medium",
+      "confidence": 56.76738492823941,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T21:00:00-07:00",
+      "demand_mw": 2356.35,
+      "is_anomaly": true,
+      "anomaly_score": -0.5679666577727047,
+      "severity": "medium",
+      "confidence": 56.79666577727047,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T22:00:00-07:00",
+      "demand_mw": 2229.89,
+      "is_anomaly": true,
+      "anomaly_score": -0.5705511721254343,
+      "severity": "medium",
+      "confidence": 57.05511721254343,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-14T23:00:00-07:00",
+      "demand_mw": 2114.55,
+      "is_anomaly": true,
+      "anomaly_score": -0.5772393526842348,
+      "severity": "medium",
+      "confidence": 57.723935268423475,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T00:00:00-07:00",
+      "demand_mw": 2136.32,
+      "is_anomaly": true,
+      "anomaly_score": -0.5673873905378481,
+      "severity": "medium",
+      "confidence": 56.73873905378481,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T01:00:00-07:00",
+      "demand_mw": 2028.28,
+      "is_anomaly": true,
+      "anomaly_score": -0.5669461229724586,
+      "severity": "medium",
+      "confidence": 56.69461229724586,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T02:00:00-07:00",
+      "demand_mw": 1967.74,
+      "is_anomaly": true,
+      "anomaly_score": -0.5690226994230145,
+      "severity": "medium",
+      "confidence": 56.90226994230145,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T03:00:00-07:00",
+      "demand_mw": 1935.81,
+      "is_anomaly": true,
+      "anomaly_score": -0.5611458481888415,
+      "severity": "medium",
+      "confidence": 56.11458481888415,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T04:00:00-07:00",
+      "demand_mw": 1980.09,
+      "is_anomaly": true,
+      "anomaly_score": -0.5594071817663482,
+      "severity": "medium",
+      "confidence": 55.94071817663482,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T05:00:00-07:00",
+      "demand_mw": 2069.23,
+      "is_anomaly": true,
+      "anomaly_score": -0.5612717566948862,
+      "severity": "medium",
+      "confidence": 56.127175669488615,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T06:00:00-07:00",
+      "demand_mw": 2257.09,
+      "is_anomaly": true,
+      "anomaly_score": -0.6027176148776305,
+      "severity": "high",
+      "confidence": 60.27176148776305,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T07:00:00-07:00",
+      "demand_mw": 2360.7,
+      "is_anomaly": false,
+      "anomaly_score": -0.5544058682920483,
+      "severity": "normal",
+      "confidence": 55.44058682920483,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T08:00:00-07:00",
+      "demand_mw": 2390.49,
+      "is_anomaly": false,
+      "anomaly_score": -0.5406114764757172,
+      "severity": "normal",
+      "confidence": 54.061147647571715,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T09:00:00-07:00",
+      "demand_mw": 2367.5,
+      "is_anomaly": false,
+      "anomaly_score": -0.5424035702143466,
+      "severity": "normal",
+      "confidence": 54.24035702143466,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T10:00:00-07:00",
+      "demand_mw": 2327.97,
+      "is_anomaly": true,
+      "anomaly_score": -0.5608408156995275,
+      "severity": "medium",
+      "confidence": 56.08408156995275,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T11:00:00-07:00",
+      "demand_mw": 2245.8,
+      "is_anomaly": true,
+      "anomaly_score": -0.5771891028029306,
+      "severity": "medium",
+      "confidence": 57.71891028029306,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T12:00:00-07:00",
+      "demand_mw": 2193.75,
+      "is_anomaly": true,
+      "anomaly_score": -0.5755984781985846,
+      "severity": "medium",
+      "confidence": 57.559847819858454,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T13:00:00-07:00",
+      "demand_mw": 2173.55,
+      "is_anomaly": true,
+      "anomaly_score": -0.5694010084414133,
+      "severity": "medium",
+      "confidence": 56.94010084414133,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T14:00:00-07:00",
+      "demand_mw": 2241.37,
+      "is_anomaly": true,
+      "anomaly_score": -0.5727743012184922,
+      "severity": "medium",
+      "confidence": 57.277430121849214,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T15:00:00-07:00",
+      "demand_mw": 2328.31,
+      "is_anomaly": true,
+      "anomaly_score": -0.5688454045257504,
+      "severity": "medium",
+      "confidence": 56.88454045257504,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    },
+    {
+      "timestamp": "2025-10-15T16:00:00-07:00",
+      "demand_mw": 2448.59,
+      "is_anomaly": true,
+      "anomaly_score": -0.5901655899635693,
+      "severity": "medium",
+      "confidence": 59.01655899635693,
+      "explanation": "ML model detected unusual CAISO forecast pattern"
+    }
+  ]
+}

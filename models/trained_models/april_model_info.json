@@ -1,0 +1,31 @@
+{
+  "month": "april",
+  "month_number": 4,
+  "feature_columns": [
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "is_weekend",
+    "month",
+    "week_of_year",
+    "is_summer",
+    "is_winter",
+    "demand_mw",
+    "demand_mw_rolling_mean",
+    "demand_mw_rolling_std",
+    "demand_mw_diff",
+    "demand_mw_pct_change",
+    "demand_mw_zscore"
+  ],
+  "trained_at": "2025-10-14T14:58:45.530057",
+  "n_samples": 720,
+  "contamination": 0.02,
+  "n_anomalies_detected": 15,
+  "training_period": "2025-03-31 17:00:00-07:00 to 2025-04-30 16:00:00-07:00",
+  "avg_demand": 2316.879041666667,
+  "std_demand": 249.88007211538036,
+  "min_demand": 1887.63,
+  "max_demand": 3096.46,
+  "model_type": "month_specific"
+}

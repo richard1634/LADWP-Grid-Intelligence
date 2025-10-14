@@ -1,0 +1,24 @@
+{
+  "feature_columns": [
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "is_weekend",
+    "price",
+    "congestion",
+    "energy",
+    "loss",
+    "price_rolling_mean",
+    "price_rolling_std",
+    "price_rolling_min",
+    "price_rolling_max",
+    "price_diff",
+    "price_pct_change",
+    "price_zscore"
+  ],
+  "trained_at": "2025-10-13T19:37:45.879779",
+  "n_samples": 8928,
+  "contamination": 0.05,
+  "n_anomalies_detected": 447
+}

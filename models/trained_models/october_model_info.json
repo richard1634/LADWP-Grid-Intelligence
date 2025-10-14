@@ -1,0 +1,31 @@
+{
+  "month": "october",
+  "month_number": 10,
+  "feature_columns": [
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "is_weekend",
+    "month",
+    "week_of_year",
+    "is_summer",
+    "is_winter",
+    "demand_mw",
+    "demand_mw_rolling_mean",
+    "demand_mw_rolling_std",
+    "demand_mw_diff",
+    "demand_mw_pct_change",
+    "demand_mw_zscore"
+  ],
+  "trained_at": "2025-10-14T14:58:47.046945",
+  "n_samples": 744,
+  "contamination": 0.02,
+  "n_anomalies_detected": 15,
+  "training_period": "2024-09-30 17:00:00-07:00 to 2024-10-31 16:00:00-07:00",
+  "avg_demand": 2677.13123655914,
+  "std_demand": 524.7286768582845,
+  "min_demand": 1923.43,
+  "max_demand": 4414.1,
+  "model_type": "month_specific"
+}

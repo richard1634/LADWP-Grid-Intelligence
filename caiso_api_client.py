@@ -31,7 +31,7 @@ class CAISOClient:
     }
     
     # Rate limiting configuration
-    MIN_REQUEST_INTERVAL = 6.0  # Minimum 6 seconds between requests (conservative)
+    MIN_REQUEST_INTERVAL = 5.0  # Minimum 5 seconds between requests (safe)
     MAX_RETRIES = 3
     RETRY_DELAY = 10.0  # Start with 10 second delay
     
@@ -177,8 +177,15 @@ class CAISOClient:
         if date is None:
             date = datetime.now(self.pacific_tz)
         
+        # Convert date to datetime if needed
+        if isinstance(date, datetime):
+            start_time = date.replace(hour=0, minute=0, second=0)
+        else:
+            # date is a date object, convert to datetime
+            start_time = datetime.combine(date, datetime.min.time())
+            start_time = self.pacific_tz.localize(start_time)
+        
         # For current/future forecasts, get from start of day to hours_ahead in the future
-        start_time = date.replace(hour=0, minute=0, second=0, microsecond=0)
         end_time = start_time + timedelta(hours=hours_ahead)
         
         params = {
@@ -242,8 +249,16 @@ class CAISOClient:
         # If date is specified, use that date's data
         if date is not None:
             # Get data for the entire specified day
-            start_time = date.replace(hour=0, minute=0, second=0, microsecond=0)
-            end_time = date.replace(hour=23, minute=59, second=59, microsecond=0)
+            # Convert date to datetime if needed
+            if isinstance(date, datetime):
+                start_time = date.replace(hour=0, minute=0, second=0)
+                end_time = date.replace(hour=23, minute=59, second=59)
+            else:
+                # date is a date object, convert to datetime
+                start_time = datetime.combine(date, datetime.min.time())
+                start_time = self.pacific_tz.localize(start_time)
+                end_time = datetime.combine(date, datetime.max.time())
+                end_time = self.pacific_tz.localize(end_time)
         else:
             # Use current time and look back
             end_time = datetime.now(self.pacific_tz)

@@ -1,0 +1,281 @@
+{
+  "generated_at": "2025-10-14T14:53:30.741106",
+  "total_anomalies": 5,
+  "high_priority": 0,
+  "medium_priority": 5,
+  "low_priority": 0,
+  "recommendations": [
+    {
+      "anomaly": {
+        "timestamp": "2025-10-15T04:00:00-07:00",
+        "demand_mw": 1980.09,
+        "severity": "medium",
+        "confidence": 56.62664142152634,
+        "time_str": "04:00 AM",
+        "date_str": "Oct 15, 2025"
+      },
+      "analysis": {
+        "anomaly_type": "UNEXPECTED_SPIKE",
+        "primary_diagnosis": "Off-Peak Abnormality",
+        "root_causes": [
+          "Off-Peak Abnormality",
+          "Moderate Load Variation"
+        ],
+        "contributing_factors": [
+          "Unusual activity during low-demand period (4:00)",
+          "11.1% deviation from typical pattern"
+        ],
+        "deviation_pct": 11.111111111111112,
+        "expected_demand": 1782.081,
+        "actual_demand": 1980.09,
+        "direction": "above",
+        "current_price": 54.65
+      },
+      "recommendation": {
+        "priority": "MEDIUM",
+        "urgency": "Action recommended within 1 hour",
+        "title": "Demand Spike Detected: 11.1% Above Normal",
+        "why": "**Primary Cause:** Off-Peak Abnormality\n\n**What's Happening:** Demand is 11.1% above the expected 1782 MW for this time period.\n\n**Contributing Factors:**\n\u2022 Unusual activity during low-demand period (4:00)\n\u2022 11.1% deviation from typical pattern\n\n\ud83d\udca1 **Low Price Opportunity:** Current prices at $54.65/MWh present optimization opportunities.",
+        "actions": [
+          {
+            "icon": "\ud83d\udce2",
+            "action": "Alert Operations Team",
+            "details": "Notify shift supervisor of 11.1% demand spike",
+            "estimated_savings": "N/A",
+            "timeframe": "Immediate"
+          }
+        ],
+        "impact": {
+          "financial": "$5,411",
+          "financial_type": "Additional Cost",
+          "reliability_risk": "Medium",
+          "magnitude_mw": 198.00900000000001,
+          "duration_estimate": "30-120 minutes (if unaddressed)"
+        },
+        "confidence": 56.62664142152634,
+        "time_sensitive": false
+      }
+    },
+    {
+      "anomaly": {
+        "timestamp": "2025-10-15T05:00:00-07:00",
+        "demand_mw": 2069.23,
+        "severity": "medium",
+        "confidence": 55.374386351940984,
+        "time_str": "05:00 AM",
+        "date_str": "Oct 15, 2025"
+      },
+      "analysis": {
+        "anomaly_type": "UNEXPECTED_SPIKE",
+        "primary_diagnosis": "Off-Peak Abnormality",
+        "root_causes": [
+          "Off-Peak Abnormality",
+          "Moderate Load Variation"
+        ],
+        "contributing_factors": [
+          "Unusual activity during low-demand period (5:00)",
+          "11.1% deviation from typical pattern"
+        ],
+        "deviation_pct": 11.11111111111111,
+        "expected_demand": 1862.307,
+        "actual_demand": 2069.23,
+        "direction": "above",
+        "current_price": 63.94
+      },
+      "recommendation": {
+        "priority": "MEDIUM",
+        "urgency": "Action recommended within 1 hour",
+        "title": "Demand Spike Detected: 11.1% Above Normal",
+        "why": "**Primary Cause:** Off-Peak Abnormality\n\n**What's Happening:** Demand is 11.1% above the expected 1862 MW for this time period.\n\n**Contributing Factors:**\n\u2022 Unusual activity during low-demand period (5:00)\n\u2022 11.1% deviation from typical pattern\n\n\ud83d\udca1 **Low Price Opportunity:** Current prices at $63.94/MWh present optimization opportunities.",
+        "actions": [
+          {
+            "icon": "\ud83d\udce2",
+            "action": "Alert Operations Team",
+            "details": "Notify shift supervisor of 11.1% demand spike",
+            "estimated_savings": "N/A",
+            "timeframe": "Immediate"
+          }
+        ],
+        "impact": {
+          "financial": "$6,615",
+          "financial_type": "Additional Cost",
+          "reliability_risk": "Medium",
+          "magnitude_mw": 206.923,
+          "duration_estimate": "30-120 minutes (if unaddressed)"
+        },
+        "confidence": 55.374386351940984,
+        "time_sensitive": false
+      }
+    },
+    {
+      "anomaly": {
+        "timestamp": "2025-10-15T06:00:00-07:00",
+        "demand_mw": 2257.09,
+        "severity": "medium",
+        "confidence": 57.05637633074668,
+        "time_str": "06:00 AM",
+        "date_str": "Oct 15, 2025"
+      },
+      "analysis": {
+        "anomaly_type": "UNEXPECTED_SPIKE",
+        "primary_diagnosis": "Moderate Load Variation",
+        "root_causes": [
+          "Moderate Load Variation"
+        ],
+        "contributing_factors": [
+          "11.1% deviation from typical pattern"
+        ],
+        "deviation_pct": 11.111111111111112,
+        "expected_demand": 2031.381,
+        "actual_demand": 2257.09,
+        "direction": "above",
+        "current_price": 65.44
+      },
+      "recommendation": {
+        "priority": "MEDIUM",
+        "urgency": "Action recommended within 1 hour",
+        "title": "Demand Spike Detected: 11.1% Above Normal",
+        "why": "**Primary Cause:** Moderate Load Variation\n\n**What's Happening:** Demand is 11.1% above the expected 2031 MW for this time period.\n\n**Contributing Factors:**\n\u2022 11.1% deviation from typical pattern\n\n\ud83d\udca1 **Low Price Opportunity:** Current prices at $65.44/MWh present optimization opportunities.",
+        "actions": [
+          {
+            "icon": "\ud83d\udce2",
+            "action": "Alert Operations Team",
+            "details": "Notify shift supervisor of 11.1% demand spike",
+            "estimated_savings": "N/A",
+            "timeframe": "Immediate"
+          }
+        ],
+        "impact": {
+          "financial": "$7,385",
+          "financial_type": "Additional Cost",
+          "reliability_risk": "Medium",
+          "magnitude_mw": 225.70900000000006,
+          "duration_estimate": "30-120 minutes (if unaddressed)"
+        },
+        "confidence": 57.05637633074668,
+        "time_sensitive": false
+      }
+    },
+    {
+      "anomaly": {
+        "timestamp": "2025-10-15T11:00:00-07:00",
+        "demand_mw": 2245.8,
+        "severity": "medium",
+        "confidence": 55.29579747900301,
+        "time_str": "11:00 AM",
+        "date_str": "Oct 15, 2025"
+      },
+      "analysis": {
+        "anomaly_type": "UNEXPECTED_SPIKE",
+        "primary_diagnosis": "Moderate Load Variation",
+        "root_causes": [
+          "Moderate Load Variation"
+        ],
+        "contributing_factors": [
+          "11.1% deviation from typical pattern"
+        ],
+        "deviation_pct": 11.111111111111107,
+        "expected_demand": 2021.2200000000003,
+        "actual_demand": 2245.8,
+        "direction": "above",
+        "current_price": 145.9
+      },
+      "recommendation": {
+        "priority": "MEDIUM",
+        "urgency": "Action recommended within 1 hour",
+        "title": "Demand Spike Detected: 11.1% Above Normal",
+        "why": "**Primary Cause:** Moderate Load Variation\n\n**What's Happening:** Demand is 11.1% above the expected 2021 MW for this time period.\n\n**Contributing Factors:**\n\u2022 11.1% deviation from typical pattern\n",
+        "actions": [
+          {
+            "icon": "\ud83d\udcc9",
+            "action": "Activate Demand Response",
+            "details": "Reduce non-critical loads by 6% to offset spike",
+            "estimated_savings": "$16,383",
+            "timeframe": "Next 30 minutes"
+          },
+          {
+            "icon": "\ud83d\udce2",
+            "action": "Alert Operations Team",
+            "details": "Notify shift supervisor of 11.1% demand spike",
+            "estimated_savings": "N/A",
+            "timeframe": "Immediate"
+          }
+        ],
+        "impact": {
+          "financial": "$16,383",
+          "financial_type": "Additional Cost",
+          "reliability_risk": "Medium",
+          "magnitude_mw": 224.57999999999993,
+          "duration_estimate": "30-120 minutes (if unaddressed)"
+        },
+        "confidence": 55.29579747900301,
+        "time_sensitive": false
+      }
+    },
+    {
+      "anomaly": {
+        "timestamp": "2025-10-15T16:00:00-07:00",
+        "demand_mw": 2448.59,
+        "severity": "medium",
+        "confidence": 55.83546244263786,
+        "time_str": "04:00 PM",
+        "date_str": "Oct 15, 2025"
+      },
+      "analysis": {
+        "anomaly_type": "UNEXPECTED_SPIKE",
+        "primary_diagnosis": "Peak Hour Irregularity",
+        "root_causes": [
+          "Peak Hour Irregularity",
+          "High Price + High Demand Event"
+        ],
+        "contributing_factors": [
+          "Occurred during typical peak period (16:00)",
+          "Elevated prices ($321.36/MWh) concurrent with demand spike"
+        ],
+        "deviation_pct": 5.246439977133324,
+        "expected_demand": 2326.53,
+        "actual_demand": 2448.59,
+        "direction": "above",
+        "current_price": 321.36
+      },
+      "recommendation": {
+        "priority": "MEDIUM",
+        "urgency": "Action recommended within 1 hour",
+        "title": "Demand Spike Detected: 5.2% Above Normal",
+        "why": "**Primary Cause:** Peak Hour Irregularity\n\n**What's Happening:** Demand is 5.2% above the expected 2327 MW for this time period.\n\n**Contributing Factors:**\n\u2022 Occurred during typical peak period (16:00)\n\u2022 Elevated prices ($321.36/MWh) concurrent with demand spike\n\n\u26a0\ufe0f **High Price Alert:** Current prices at $321.36/MWh increase the urgency of this anomaly.",
+        "actions": [
+          {
+            "icon": "\ud83d\udcc9",
+            "action": "Activate Demand Response",
+            "details": "Reduce non-critical loads by 3% to offset spike",
+            "estimated_savings": "$39,344",
+            "timeframe": "Next 30 minutes"
+          },
+          {
+            "icon": "\ud83d\udd0b",
+            "action": "Discharge Battery Storage",
+            "details": "Deploy stored energy to avoid purchasing at $321.36/MWh",
+            "estimated_savings": "$12,068",
+            "timeframe": "Immediate"
+          },
+          {
+            "icon": "\ud83d\udce2",
+            "action": "Alert Operations Team",
+            "details": "Notify shift supervisor of 5.2% demand spike",
+            "estimated_savings": "N/A",
+            "timeframe": "Immediate"
+          }
+        ],
+        "impact": {
+          "financial": "$19,613",
+          "financial_type": "Additional Cost",
+          "reliability_risk": "Low",
+          "magnitude_mw": 122.05999999999995,
+          "duration_estimate": "30-120 minutes (if unaddressed)"
+        },
+        "confidence": 55.83546244263786,
+        "time_sensitive": false
+      }
+    }
+  ]
+}

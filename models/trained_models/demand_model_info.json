@@ -1,0 +1,20 @@
+{
+  "feature_columns": [
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "is_weekend",
+    "month",
+    "week_of_year",
+    "is_summer",
+    "is_winter",
+    "demand_mw",
+    "demand_mw_diff",
+    "demand_mw_pct_change"
+  ],
+  "trained_at": "2025-10-14T12:22:39.441660",
+  "n_samples": 1464,
+  "contamination": 0.2,
+  "n_anomalies_detected": 293
+}
