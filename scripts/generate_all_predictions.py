@@ -15,7 +15,9 @@ import pickle
 import logging
 import sys
 
-sys.path.append(str(Path(__file__).parent))
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from caiso_api_client import CAISOClient
 from models.anomaly_detector import AnomalyDetector
 
@@ -29,10 +31,12 @@ class MonthlyPredictor:
     def __init__(self):
         self.caiso_client = CAISOClient()
         self.detector = AnomalyDetector()
-        self.models_dir = Path(__file__).parent / "models" / "trained_models"
-        self.predictions_dir = Path(__file__).parent / "models" / "predictions"
+        # Use parent.parent to get to root directory from scripts/
+        root_dir = Path(__file__).parent.parent
+        self.models_dir = root_dir / "models" / "trained_models"
+        self.predictions_dir = root_dir / "models" / "predictions"
         self.predictions_dir.mkdir(parents=True, exist_ok=True)
-        self.db_path = Path(__file__).parent / "data" / "historical_data" / "ladwp_grid_data.db"
+        self.db_path = root_dir / "data" / "historical_data" / "ladwp_grid_data.db"
         
         self.months = [
             'january', 'february', 'march', 'april', 'may', 'june',

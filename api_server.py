@@ -2,13 +2,18 @@
 FastAPI server for LADWP Grid Intelligence Dashboard
 Exposes existing Python logic as REST API for React frontend
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
 from pathlib import Path
 import json
 import pytz
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import existing modules
 from caiso_api_client import (
@@ -17,6 +22,7 @@ from caiso_api_client import (
     detect_price_spikes,
     calculate_grid_stress_score
 )
+from llm_recommendation_engine import LLMRecommendationEngine
 
 app = FastAPI(title="LADWP Grid Intelligence API", version="2.0.0")
 
@@ -83,13 +89,14 @@ async def get_grid_status():
 
 @app.get("/api/demand-forecast")
 async def get_demand_forecast(date: str = None):
-    """Get 48-hour demand forecast (historical + future predictions)"""
+    """Get demand data: last 24 hours historical + 30 hours CAISO forecast"""
     try:
         if date:
             selected_date = datetime.fromisoformat(date)
-            demand_df = client.get_system_demand(date=selected_date)
+            demand_df = client.get_system_demand(date=selected_date, hours_ahead=54)
         else:
-            demand_df = client.get_system_demand()
+            # Get 54 hours from start of day (catches last 24h historical + 30h forecast)
+            demand_df = client.get_system_demand(hours_ahead=54)
         
         if demand_df is None or demand_df.empty:
             raise HTTPException(status_code=503, detail="Unable to fetch demand forecast")
@@ -109,6 +116,10 @@ async def get_demand_forecast(date: str = None):
         # Mark which data points are forecasts vs historical
         current_time = datetime.now(pytz.timezone('America/Los_Angeles'))
         demand_df['is_forecast'] = demand_df['timestamp'] > current_time
+        
+        # Filter to last 24 hours of historical + all future forecasts
+        cutoff_time = current_time - timedelta(hours=24)
+        demand_df = demand_df[demand_df['timestamp'] >= cutoff_time]
         
         # Filter to LADWP area if available
         if 'TAC_AREA_NAME' in demand_df.columns:
@@ -238,14 +249,87 @@ async def get_ml_predictions(month: str = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def _generate_fallback_recommendations(anomalies: list) -> list:
+    """Generate simple fallback recommendations when LLM is not available"""
+    recommendations = []
+    
+    for anomaly in anomalies[:5]:  # Limit to top 5 anomalies
+        demand = anomaly.get('demand_mw', 0)
+        predicted = anomaly.get('predicted_demand', demand)
+        confidence = anomaly.get('confidence', 0.0)
+        severity = anomaly.get('severity', 'medium')
+        
+        # Format timestamp
+        ts = anomaly.get('timestamp', '')
+        try:
+            dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+            time_str = dt.strftime('%I:%M %p')
+            date_str = dt.strftime('%b %d, %Y')
+        except:
+            time_str = "Unknown"
+            date_str = "Unknown"
+        
+        # Determine priority and create recommendation
+        is_spike = demand > predicted if predicted else demand > 6000
+        priority = "HIGH" if confidence > 80 or demand > 7000 else "MEDIUM"
+        
+        rec = {
+            "timestamp": ts,
+            "anomaly": {
+                "timestamp": ts,
+                "demand_mw": demand,
+                "severity": severity,
+                "confidence": confidence,
+                "time_str": time_str,
+                "date_str": date_str
+            },
+            "analysis": {
+                "source": "rule-based",
+                "model": "fallback",
+                "generated_at": datetime.now().isoformat()
+            },
+            "recommendation": {
+                "priority": priority,
+                "urgency": "immediate" if demand > 7000 else "normal",
+                "title": f"{'🚨' if priority == 'HIGH' else '⚠️'} Demand Anomaly Detected - {demand:,.0f} MW",
+                "why": f"Demand of {demand:,.0f} MW {'significantly exceeds' if is_spike else 'is below'} predicted level of {predicted:,.0f} MW.",
+                "actions": [
+                    {
+                        "icon": "🔍",
+                        "action": "Verify Data Accuracy",
+                        "details": "Confirm reading with SCADA systems",
+                        "timeframe": "Immediately"
+                    },
+                    {
+                        "icon": "⚡",
+                        "action": "Assess Grid Stability",
+                        "details": "Check substation loading and voltage levels",
+                        "timeframe": "Within 5 minutes"
+                    }
+                ],
+                "impact": {
+                    "financial": f"Estimated ${abs(demand - predicted) * 50:,.0f}/hour impact",
+                    "financial_type": "high_cost" if is_spike else "potential_savings",
+                    "reliability_risk": "HIGH" if demand > 7000 else "MEDIUM",
+                    "magnitude_mw": abs(demand - predicted),
+                    "duration_estimate": "Unknown"
+                },
+                "confidence": confidence,
+                "time_sensitive": demand > 7000
+            }
+        }
+        recommendations.append(rec)
+    
+    return recommendations
+
 @app.get("/api/recommendations")
-async def get_recommendations(month: str = None):
-    """Get smart recommendations based on anomalies from ML predictions"""
+async def get_recommendations(month: str = None, use_llm: bool = False):
+    """Get AI-powered smart recommendations based on grid data and ML predictions"""
     try:
         if not month:
             month = datetime.now().strftime('%B').lower()
         
-        # Load ML predictions file (same source as /api/ml-predictions)
+        # Load ML predictions file
         predictions_file = Path(__file__).parent / "models" / "predictions" / f"{month}_predictions.json"
         
         if not predictions_file.exists():
@@ -259,48 +343,67 @@ async def get_recommendations(month: str = None):
             }
         
         with open(predictions_file, 'r') as f:
-            predictions = json.load(f)
+            predictions_data = json.load(f)
         
-        # Extract anomalies from predictions
-        anomalies = [p for p in predictions.get('predictions', []) 
+        # Extract predictions and anomalies
+        predictions_list = predictions_data.get('predictions', [])
+        anomalies = [p for p in predictions_list 
                     if p.get('is_anomaly') or p.get('severity') != 'normal']
         
-        # Generate recommendations from anomalies
-        recommendations = []
-        for anomaly in anomalies:
-            rec = {
-                "timestamp": anomaly.get('timestamp'),
-                "anomaly": {
-                    "timestamp": anomaly.get('timestamp'),
-                    "demand_mw": anomaly.get('demand_mw'),
-                    "severity": anomaly.get('severity', 'medium'),
-                    "confidence": anomaly.get('confidence', 0.0)
-                },
-                "analysis": {
-                    "anomaly_type": "demand_spike" if anomaly.get('demand_mw', 0) > 2500 else "demand_drop",
-                    "root_causes": ["Detected by ML model"],
-                    "context": f"Anomaly detected with {anomaly.get('confidence', 0)*100:.1f}% confidence"
-                },
-                "recommendation": {
-                    "priority": "high" if anomaly.get('confidence', 0) > 0.8 else "medium",
-                    "urgency": "immediate" if anomaly.get('confidence', 0) > 0.9 else "normal",
-                    "title": f"Investigate {anomaly.get('severity', 'medium')} severity anomaly",
-                    "why": "ML model detected unusual demand pattern",
-                    "actions": [
-                        "Monitor system stability",
-                        "Check for external factors",
-                        "Review operational logs"
-                    ],
-                    "impact": "Medium operational risk"
-                }
-            }
-            recommendations.append(rec)
+        # Get current demand (use average from predictions as proxy)
+        current_demand = sum(p.get('demand_mw', 0) for p in predictions_list[:10]) / min(len(predictions_list), 10)
+        
+        # Get price forecast (try to load or use placeholder)
+        price_forecast = []
+        try:
+            price_df = client.get_real_time_prices(hours_back=6)
+            if price_df is not None and not price_df.empty:
+                # Convert to list of dicts
+                for _, row in price_df.iterrows():
+                    price_forecast.append({
+                        'timestamp': row.get('timestamp', datetime.now()).isoformat() if 'timestamp' in row else datetime.now().isoformat(),
+                        'price_per_mwh': float(row.get('LMP_PRC', 50.0))
+                    })
+        except:
+            # Use placeholder if price fetch fails
+            for i in range(24):
+                price_forecast.append({
+                    'timestamp': (datetime.now() + timedelta(hours=i)).isoformat(),
+                    'price_per_mwh': 50.0
+                })
+        
+        # Generate recommendations using LLM or fallback
+        if use_llm and os.getenv("OPENAI_API_KEY"):
+            try:
+                llm_engine = LLMRecommendationEngine()
+                recommendations = llm_engine.generate_recommendations(
+                    predictions=predictions_list,
+                    price_forecast=price_forecast,
+                    current_demand=current_demand,
+                    anomalies=anomalies
+                )
+            except Exception as llm_error:
+                print(f"LLM generation failed: {llm_error}")
+                # Fall back to simple recommendations
+                recommendations = _generate_fallback_recommendations(anomalies)
+        else:
+            # Use fallback if LLM not configured
+            recommendations = _generate_fallback_recommendations(anomalies)
+        
+        # Count priorities
+        high_priority = sum(1 for r in recommendations if r.get('recommendation', {}).get('priority') == 'HIGH')
+        medium_priority = sum(1 for r in recommendations if r.get('recommendation', {}).get('priority') == 'MEDIUM')
+        low_priority = sum(1 for r in recommendations if r.get('recommendation', {}).get('priority') == 'LOW')
         
         result = {
-            "generated_at": predictions.get('generated_at'),
-            "month": predictions.get('model_month', month),
+            "generated_at": predictions_data.get('generated_at'),
+            "month": predictions_data.get('model_month', month),
             "total_anomalies": len(anomalies),
-            "recommendations": recommendations
+            "high_priority": high_priority,
+            "medium_priority": medium_priority,
+            "low_priority": low_priority,
+            "recommendations": recommendations,
+            "llm_powered": use_llm and os.getenv("OPENAI_API_KEY") is not None
         }
         
         return {
@@ -308,6 +411,88 @@ async def get_recommendations(month: str = None):
             "data": result
         }
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/generate-anomaly-recommendation")
+async def generate_anomaly_recommendation(request: Request):
+    """Generate AI-powered recommendation for a single anomaly"""
+    try:
+        body = await request.json()
+        anomaly = body.get('anomaly')
+        
+        if not anomaly:
+            raise HTTPException(status_code=400, detail="Anomaly data required")
+        
+        # Get current demand context
+        current_demand = anomaly.get('demand_mw', 3000.0)
+        predicted_demand = anomaly.get('predicted_demand', current_demand * 0.9)
+        
+        # Get price forecast context
+        price_forecast = []
+        try:
+            price_df = client.get_real_time_prices(hours_back=6)
+            if price_df is not None and not price_df.empty:
+                for _, row in price_df.iterrows():
+                    price_forecast.append({
+                        'timestamp': row.get('timestamp', datetime.now()).isoformat() if 'timestamp' in row else datetime.now().isoformat(),
+                        'price_per_mwh': float(row.get('LMP_PRC', 50.0))
+                    })
+        except:
+            # Use placeholder if price fetch fails
+            for i in range(24):
+                price_forecast.append({
+                    'timestamp': (datetime.now() + timedelta(hours=i)).isoformat(),
+                    'price_per_mwh': 50.0
+                })
+        
+        # Check if API key is configured
+        if not os.getenv("OPENAI_API_KEY"):
+            raise HTTPException(
+                status_code=503,
+                detail="OpenAI API key not configured. Please set OPENAI_API_KEY in .env file"
+            )
+        
+        # Generate LLM recommendation
+        try:
+            llm_engine = LLMRecommendationEngine()
+            
+            # Create predictions context (just this anomaly with some normal values for context)
+            predictions_context = [anomaly]
+            for i in range(5):
+                predictions_context.append({
+                    'timestamp': (datetime.now() + timedelta(hours=i+1)).isoformat(),
+                    'demand_mw': predicted_demand,
+                    'is_anomaly': False
+                })
+            
+            recommendations = llm_engine.generate_recommendations(
+                predictions=predictions_context,
+                price_forecast=price_forecast,
+                current_demand=current_demand,
+                anomalies=[anomaly]  # Single anomaly
+            )
+            
+            # Return just the first recommendation (for this anomaly)
+            if recommendations and len(recommendations) > 0:
+                rec = recommendations[0].get('recommendation', {})
+                return {
+                    "success": True,
+                    "data": rec
+                }
+            else:
+                raise Exception("No recommendation generated")
+                
+        except Exception as llm_error:
+            print(f"LLM generation failed: {llm_error}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to generate AI recommendation: {str(llm_error)}"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error generating recommendation: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Legacy endpoint for old recommendation files

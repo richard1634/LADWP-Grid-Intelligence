@@ -1,4 +1,4 @@
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, Legend, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import type { MLPredictions } from '../types';
 import { Badge } from './ui/Badge';
 
@@ -16,21 +16,45 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
     );
   }
 
-  // Format predictions for scatter chart
-  const chartData = data.predictions.map((pred, index) => ({
-    index: index + 1,
-    value: pred.demand_mw || pred.predicted_demand || 0,
-    isAnomaly: pred.is_anomaly,
-    confidence: pred.confidence * 100,
-    timestamp: new Date(pred.timestamp).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric'
-    })
-  }));
+  // Format predictions for line chart
+  const chartData = data.predictions.map((pred, index) => {
+    const date = new Date(pred.timestamp);
+    return {
+      index: index + 1,
+      dateValue: date.getTime(), // Numeric timestamp for plotting
+      value: pred.demand_mw || pred.predicted_demand || 0,
+      isAnomaly: pred.is_anomaly,
+      confidence: pred.confidence, // Already stored as percentage (0-100)
+      timestamp: date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      }),
+      dateLabel: date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      })
+    };
+  });
 
-  const normalPoints = chartData.filter(d => !d.isAnomaly);
-  const anomalyPoints = chartData.filter(d => d.isAnomaly);
+  // Custom dot component - only show dots for anomalies
+  const CustomDot = (props: any) => {
+    const { cx, cy, payload } = props;
+    if (payload.isAnomaly) {
+      return (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={6}
+          fill="#ef4444"
+          stroke="#fff"
+          strokeWidth={2}
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -41,7 +65,7 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
             Machine learning predictions with anomaly highlighting
           </p>
         </div>
-        <Badge variant={data.anomalies_detected > 0 ? 'red' : 'emerald'}>
+        <Badge variant={data.anomalies_detected > 0 ? 'error' : 'success'}>
           {data.model_type}
         </Badge>
       </div>
@@ -63,32 +87,38 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
         <div className="bg-green-50 rounded-lg p-3 text-center">
           <p className="text-sm text-gray-600">Avg Confidence</p>
           <p className="text-2xl font-bold text-green-600">
-            {(data.predictions.reduce((sum, p) => sum + p.confidence, 0) / data.predictions.length * 100).toFixed(0)}%
+            {(data.predictions.reduce((sum, p) => sum + p.confidence, 0) / data.predictions.length).toFixed(1)}%
           </p>
         </div>
       </div>
 
-      {/* Scatter Chart */}
+      {/* Line Chart */}
       <ResponsiveContainer width="100%" height={350}>
-        <ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
-            type="number" 
-            dataKey="index" 
-            name="Sequence"
-            label={{ value: 'Prediction Sequence', position: 'bottom', offset: 0 }}
-            tick={{ fontSize: 11 }}
+            dataKey="dateValue" 
+            type="number"
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(timestamp) => {
+              const date = new Date(timestamp);
+              return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric'
+              });
+            }}
+            label={{ value: 'Date & Time', position: 'insideBottom', offset: -10, style: { fontSize: 12 } }}
+            tick={{ fontSize: 10, textAnchor: 'end' }}
+            angle={-45}
+            height={60}
           />
           <YAxis 
-            type="number"
             dataKey="value"
-            name="Demand"
-            label={{ value: 'Predicted Demand (MW)', angle: -90, position: 'insideLeft' }}
+            label={{ value: 'Predicted Demand (MW)', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
             tick={{ fontSize: 11 }}
           />
-          <ZAxis type="number" dataKey="confidence" range={[50, 400]} name="Confidence" />
           <Tooltip 
-            cursor={{ strokeDasharray: '3 3' }}
             contentStyle={{ 
               backgroundColor: 'white', 
               border: '1px solid #e5e7eb',
@@ -97,35 +127,35 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
             }}
             formatter={(value: any, name: string) => {
               if (name === 'Demand') return [`${Number(value).toFixed(0)} MW`, 'Predicted Demand'];
-              if (name === 'Confidence') return [`${Number(value).toFixed(1)}%`, 'Confidence'];
               return [value, name];
             }}
-            labelFormatter={(label) => `Point #${label}`}
+            labelFormatter={(_label, payload) => {
+              if (payload && payload.length > 0) {
+                return payload[0].payload.timestamp;
+              }
+              return '';
+            }}
           />
           <Legend 
             wrapperStyle={{ paddingTop: '10px' }}
             payload={[
-              { value: 'Normal Predictions', type: 'circle', color: '#22c55e' },
-              { value: 'Detected Anomalies', type: 'circle', color: '#ef4444' },
+              { value: 'Demand Forecast', type: 'line', color: '#3b82f6' },
+              { value: 'Detected Anomaly', type: 'circle', color: '#ef4444' },
             ]}
           />
           
-          {/* Normal predictions */}
-          <Scatter 
-            name="Normal" 
-            data={normalPoints} 
-            fill="#22c55e"
-            fillOpacity={0.6}
+          {/* Single continuous line with anomaly dots */}
+          <Line 
+            type="monotone"
+            dataKey="value"
+            name="Demand"
+            stroke="#3b82f6"
+            strokeWidth={2.5}
+            dot={<CustomDot />}
+            activeDot={{ r: 6 }}
+            connectNulls={true}
           />
-          
-          {/* Anomaly predictions */}
-          <Scatter 
-            name="Anomaly" 
-            data={anomalyPoints} 
-            fill="#ef4444"
-            fillOpacity={0.8}
-          />
-        </ScatterChart>
+        </LineChart>
       </ResponsiveContainer>
 
       {/* Anomaly Alert */}

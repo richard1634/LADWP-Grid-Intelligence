@@ -44,19 +44,19 @@ class FutureAnomalyPredictor:
             logger.warning("Baseline patterns not found, run baseline_patterns.py first")
             self.baseline = None
     
-    def get_future_forecast(self, hours_ahead: int = 48) -> pd.DataFrame:
+    def fetch_future_forecast(self, hours_ahead: int = 30) -> pd.DataFrame:
         """
-        Get CAISO's demand forecast for LADWP.
+        Fetch CAISO forecast for future hours
         
         Args:
-            hours_ahead: How many hours ahead to forecast (default: 48)
+            hours_ahead: How many hours ahead to forecast (default: 30, CAISO DAM limit)
         
         Returns:
             DataFrame with timestamp and forecasted demand_mw
         """
         logger.info(f"📡 Fetching CAISO forecast for next {hours_ahead} hours...")
         
-        # Get CAISO forecast
+        # Get CAISO forecast (DAM provides ~30 hours ahead)
         forecast_df = self.caiso_client.get_system_demand(hours_ahead=hours_ahead)
         
         if forecast_df is None or forecast_df.empty:
@@ -82,12 +82,12 @@ class FutureAnomalyPredictor:
         
         return forecast_df[['timestamp', 'demand_mw']]
     
-    def predict_future_anomalies(self, hours_ahead: int = 48) -> pd.DataFrame:
+    def predict_future_anomalies(self, hours_ahead: int = 30) -> pd.DataFrame:
         """
         Predict which future time periods will have anomalous demand.
         
         Args:
-            hours_ahead: How many hours ahead to predict (default: 48)
+            hours_ahead: How many hours ahead to predict (default: 30, CAISO DAM limit)
         
         Returns:
             DataFrame with predictions including anomaly flags and scores
@@ -97,7 +97,7 @@ class FutureAnomalyPredictor:
         logger.info("=" * 70)
         
         # Get CAISO forecast
-        forecast_df = self.get_future_forecast(hours_ahead)
+        forecast_df = self.fetch_future_forecast(hours_ahead)
         
         if forecast_df.empty:
             logger.error("No forecast data available")
@@ -136,22 +136,43 @@ class FutureAnomalyPredictor:
         forecast_df = combined_df.iloc[len(historical_df):].copy()
         forecast_df = forecast_df.reset_index(drop=True)
         
-        # Load feature info
-        model_info_path = Path(__file__).parent / "trained_models" / "demand_model_info.json"
-        with open(model_info_path, 'r') as f:
-            model_info = json.load(f)
+        # Determine which month-specific model to use
+        current_month = datetime.now().strftime('%B').lower()
+        month_model_path = Path(__file__).parent / "trained_models" / f"{current_month}_demand_anomaly_detector.pkl"
+        month_scaler_path = Path(__file__).parent / "trained_models" / f"{current_month}_demand_scaler.pkl"
+        month_info_path = Path(__file__).parent / "trained_models" / f"{current_month}_model_info.json"
+        
+        # Load month-specific model and scaler if available
+        if month_model_path.exists() and month_scaler_path.exists() and month_info_path.exists():
+            logger.info(f"📅 Using {current_month.title()}-specific model for anomaly detection...")
+            
+            # Load month-specific model and scaler
+            import pickle
+            with open(month_model_path, 'rb') as f:
+                month_model = pickle.load(f)
+            with open(month_scaler_path, 'rb') as f:
+                month_scaler = pickle.load(f)
+            with open(month_info_path, 'r') as f:
+                model_info = json.load(f)
+        else:
+            logger.warning(f"⚠️  {current_month.title()} model not found, using generic demand model")
+            month_model = self.anomaly_detector.demand_model
+            month_scaler = self.anomaly_detector.demand_scaler
+            model_info_path = Path(__file__).parent / "trained_models" / "demand_model_info.json"
+            with open(model_info_path, 'r') as f:
+                model_info = json.load(f)
         
         # Prepare features for prediction
         feature_cols = model_info['feature_columns']
         X = forecast_df[feature_cols].copy()
         
-        # Scale features
-        X_scaled = self.anomaly_detector.demand_scaler.transform(X)
+        # Scale features using month-specific scaler
+        X_scaled = month_scaler.transform(X)
         
-        # Predict anomalies
+        # Predict anomalies using month-specific model
         logger.info("🤖 Running anomaly detection on future forecast...")
-        predictions = self.anomaly_detector.demand_model.predict(X_scaled)
-        anomaly_scores = self.anomaly_detector.demand_model.score_samples(X_scaled)
+        predictions = month_model.predict(X_scaled)
+        anomaly_scores = month_model.score_samples(X_scaled)
         
         # Add predictions to dataframe
         forecast_df['is_anomaly'] = predictions == -1
@@ -172,9 +193,34 @@ class FutureAnomalyPredictor:
         
         forecast_df['severity'] = forecast_df.apply(calculate_severity, axis=1)
         
-        # NOTE: Removed baseline comparison - anomalies are now based purely on
-        # the ML model detecting unusual patterns in CAISO's forecasts themselves,
-        # not comparing to historical averages
+        # Apply baseline comparison filter - only flag as anomaly if SIGNIFICANTLY different from LADWP historical patterns
+        # This reduces false positives by comparing CAISO forecasts to our historical averages
+        if self.baseline:
+            logger.info("📊 Applying baseline comparison filter...")
+            original_anomalies = forecast_df['is_anomaly'].sum()
+            
+            for idx, row in forecast_df[forecast_df['is_anomaly']].iterrows():
+                hour = row['timestamp'].hour
+                expected = self.baseline.get_expected_demand(hour)
+                
+                if expected and expected['mean'] > 0:
+                    # Calculate deviation from LADWP historical average
+                    deviation_mw = abs(row['demand_mw'] - expected['mean'])
+                    deviation_pct = (deviation_mw / expected['mean']) * 100
+                    
+                    # Only keep as anomaly if BOTH:
+                    # 1. Deviation >30% from historical average, AND
+                    # 2. Absolute deviation >800 MW (meaningful for LADWP's 2000-6200 MW range)
+                    if deviation_pct < 30 or deviation_mw < 800:
+                        # Not significantly different from historical pattern - remove anomaly flag
+                        forecast_df.loc[idx, 'is_anomaly'] = False
+                        forecast_df.loc[idx, 'severity'] = 'normal'
+                        forecast_df.loc[idx, 'confidence'] = 0
+            
+            filtered_anomalies = forecast_df['is_anomaly'].sum()
+            logger.info(f"   Filtered {original_anomalies} → {filtered_anomalies} anomalies (removed {original_anomalies - filtered_anomalies} within normal range)")
+        else:
+            logger.warning("⚠️  No baseline patterns available - using ML predictions without baseline filter")
         
         # Summary statistics
         n_anomalies = forecast_df['is_anomaly'].sum()
@@ -247,10 +293,16 @@ class FutureAnomalyPredictor:
         output_path = output_dir / filename
         
         # Prepare data for JSON
+        n_anomalies = int(forecast_df['is_anomaly'].sum())
+        total_points = len(forecast_df)
+        
         predictions = {
             'generated_at': datetime.now().isoformat(),
-            'forecast_points': len(forecast_df),
-            'anomaly_count': int(forecast_df['is_anomaly'].sum()),
+            'model_type': 'future_anomaly_detector',
+            'forecast_period': f"{forecast_df['timestamp'].min().isoformat()} to {forecast_df['timestamp'].max().isoformat()}",
+            'total_points': total_points,
+            'anomalies_detected': n_anomalies,
+            'anomaly_rate': round((n_anomalies / total_points) * 100, 2) if total_points > 0 else 0,
             'predictions': []
         }
         
@@ -279,8 +331,8 @@ def main():
     """Run future anomaly prediction."""
     predictor = FutureAnomalyPredictor()
     
-    # Predict anomalies in next 48 hours
-    forecast_df = predictor.predict_future_anomalies(hours_ahead=48)
+    # Predict anomalies in next 30 hours (CAISO DAM forecast limit)
+    forecast_df = predictor.predict_future_anomalies(hours_ahead=30)
     
     if forecast_df.empty:
         print("\n❌ No forecast data available")
@@ -295,7 +347,7 @@ def main():
     print("=" * 70)
     
     if len(alerts) == 0:
-        print("\n✅ No anomalies predicted in the next 48 hours")
+        print("\n✅ No anomalies predicted in the next 30 hours")
         print(f"   All {len(forecast_df)} forecast points appear normal")
     else:
         print(f"\n🚨 {len(alerts)} ANOMALIES PREDICTED:")

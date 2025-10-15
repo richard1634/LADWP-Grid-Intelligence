@@ -112,7 +112,7 @@ export function RecommendationCards({ data }: RecommendationCardsProps) {
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-600 line-clamp-1">
-                      {rec.anomaly.time_str} - {rec.anomaly.demand_mw.toFixed(0)} MW
+                      {rec.anomaly ? `${rec.anomaly.time_str} - ${rec.anomaly.demand_mw.toFixed(0)} MW` : 'General Recommendation'}
                     </p>
                   </div>
                 </div>
@@ -153,22 +153,30 @@ export function RecommendationCards({ data }: RecommendationCardsProps) {
                           </h5>
                           <div className="bg-white rounded-lg p-3 border border-gray-200 space-y-2">
                             <div className="grid grid-cols-2 gap-2 text-sm">
-                              <div>
-                                <span className="text-gray-600">Type:</span>
-                                <span className="ml-2 font-medium">{rec.analysis.anomaly_type.replace(/_/g, ' ')}</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Deviation:</span>
-                                <span className="ml-2 font-medium">{rec.analysis.deviation_pct.toFixed(1)}%</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Expected:</span>
-                                <span className="ml-2 font-medium">{rec.analysis.expected_demand.toFixed(0)} MW</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Actual:</span>
-                                <span className="ml-2 font-medium">{rec.analysis.actual_demand.toFixed(0)} MW</span>
-                              </div>
+                              {rec.analysis.anomaly_type && (
+                                <div>
+                                  <span className="text-gray-600">Type:</span>
+                                  <span className="ml-2 font-medium">{rec.analysis.anomaly_type.replace(/_/g, ' ')}</span>
+                                </div>
+                              )}
+                              {rec.analysis.deviation_pct !== undefined && (
+                                <div>
+                                  <span className="text-gray-600">Deviation:</span>
+                                  <span className="ml-2 font-medium">{rec.analysis.deviation_pct.toFixed(1)}%</span>
+                                </div>
+                              )}
+                              {rec.analysis.expected_demand !== undefined && (
+                                <div>
+                                  <span className="text-gray-600">Expected:</span>
+                                  <span className="ml-2 font-medium">{rec.analysis.expected_demand.toFixed(0)} MW</span>
+                                </div>
+                              )}
+                              {rec.analysis.actual_demand !== undefined && (
+                                <div>
+                                  <span className="text-gray-600">Actual:</span>
+                                  <span className="ml-2 font-medium">{rec.analysis.actual_demand.toFixed(0)} MW</span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -203,14 +211,18 @@ export function RecommendationCards({ data }: RecommendationCardsProps) {
                       {/* Timestamp & Impact */}
                       <div className="pt-2 border-t border-gray-200 space-y-2">
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div>
-                            <span className="text-gray-500">Detected:</span>
-                            <span className="ml-1 font-medium">{rec.anomaly.date_str} at {rec.anomaly.time_str}</span>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Severity:</span>
-                            <span className="ml-1 font-medium capitalize">{rec.anomaly.severity}</span>
-                          </div>
+                          {rec.anomaly && (
+                            <>
+                              <div>
+                                <span className="text-gray-500">Detected:</span>
+                                <span className="ml-1 font-medium">{rec.anomaly.date_str} at {rec.anomaly.time_str}</span>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">Severity:</span>
+                                <span className="ml-1 font-medium capitalize">{rec.anomaly.severity}</span>
+                              </div>
+                            </>
+                          )}
                           {rec.recommendation.impact && (
                             <>
                               <div>

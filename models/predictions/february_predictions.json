@@ -1,130 +1,200 @@
 {
-  "generated_at": "2025-10-14T23:02:59.522819",
+  "generated_at": "2025-10-15T13:09:30.103568",
   "model_type": "february_specific",
   "model_month": "february",
-  "forecast_period": "2025-10-15 00:00:00-07:00 to 2025-10-15 16:00:00-07:00",
-  "total_points": 17,
+  "forecast_period": "2025-10-15 14:00:00-07:00 to 2025-10-16 16:00:00-07:00",
+  "total_points": 27,
   "anomalies_detected": 1,
-  "anomaly_rate": 5.88235294117647,
+  "anomaly_rate": 3.7037037037037033,
   "predictions": [
-    {
-      "timestamp": "2025-10-15T00:00:00-07:00",
-      "demand_mw": 2136.32,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 58.19257823315046
-    },
-    {
-      "timestamp": "2025-10-15T01:00:00-07:00",
-      "demand_mw": 2028.28,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 55.849897870700524
-    },
-    {
-      "timestamp": "2025-10-15T02:00:00-07:00",
-      "demand_mw": 1967.74,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.84033735400878
-    },
-    {
-      "timestamp": "2025-10-15T03:00:00-07:00",
-      "demand_mw": 1935.81,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.131945950300356
-    },
-    {
-      "timestamp": "2025-10-15T04:00:00-07:00",
-      "demand_mw": 1980.09,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 55.246163067507126
-    },
-    {
-      "timestamp": "2025-10-15T05:00:00-07:00",
-      "demand_mw": 2069.23,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 55.075784686997196
-    },
-    {
-      "timestamp": "2025-10-15T06:00:00-07:00",
-      "demand_mw": 2257.09,
-      "is_anomaly": true,
-      "severity": "medium",
-      "confidence": 58.37971076822678
-    },
-    {
-      "timestamp": "2025-10-15T07:00:00-07:00",
-      "demand_mw": 2360.7,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.66300397755784
-    },
-    {
-      "timestamp": "2025-10-15T08:00:00-07:00",
-      "demand_mw": 2390.49,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.21314112119654
-    },
-    {
-      "timestamp": "2025-10-15T09:00:00-07:00",
-      "demand_mw": 2367.5,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 53.660013756806045
-    },
-    {
-      "timestamp": "2025-10-15T10:00:00-07:00",
-      "demand_mw": 2327.97,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.32785385661083
-    },
-    {
-      "timestamp": "2025-10-15T11:00:00-07:00",
-      "demand_mw": 2245.8,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 56.40070118432801
-    },
-    {
-      "timestamp": "2025-10-15T12:00:00-07:00",
-      "demand_mw": 2193.75,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.89705038252558
-    },
-    {
-      "timestamp": "2025-10-15T13:00:00-07:00",
-      "demand_mw": 2173.55,
-      "is_anomaly": false,
-      "severity": "normal",
-      "confidence": 54.50984139696789
-    },
     {
       "timestamp": "2025-10-15T14:00:00-07:00",
       "demand_mw": 2241.37,
       "is_anomaly": false,
       "severity": "normal",
-      "confidence": 55.80625593248624
+      "confidence": 55.98144350046665
     },
     {
       "timestamp": "2025-10-15T15:00:00-07:00",
       "demand_mw": 2328.31,
       "is_anomaly": false,
       "severity": "normal",
-      "confidence": 56.082959863671775
+      "confidence": 54.20017164279412
     },
     {
       "timestamp": "2025-10-15T16:00:00-07:00",
       "demand_mw": 2448.59,
       "is_anomaly": false,
       "severity": "normal",
-      "confidence": 57.37101956471785
+      "confidence": 53.805646505830914
+    },
+    {
+      "timestamp": "2025-10-15T17:00:00-07:00",
+      "demand_mw": 2517.93,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 52.631014172793535
+    },
+    {
+      "timestamp": "2025-10-15T18:00:00-07:00",
+      "demand_mw": 2553.67,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.41495865664455
+    },
+    {
+      "timestamp": "2025-10-15T19:00:00-07:00",
+      "demand_mw": 2607.52,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 54.05076580154896
+    },
+    {
+      "timestamp": "2025-10-15T20:00:00-07:00",
+      "demand_mw": 2559.89,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.42581267226952
+    },
+    {
+      "timestamp": "2025-10-15T21:00:00-07:00",
+      "demand_mw": 2479.75,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.495886337145095
+    },
+    {
+      "timestamp": "2025-10-15T22:00:00-07:00",
+      "demand_mw": 2349.13,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.448453652265215
+    },
+    {
+      "timestamp": "2025-10-15T23:00:00-07:00",
+      "demand_mw": 2221.04,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.36869737659276
+    },
+    {
+      "timestamp": "2025-10-16T00:00:00-07:00",
+      "demand_mw": 2268.81,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 54.12507353599817
+    },
+    {
+      "timestamp": "2025-10-16T01:00:00-07:00",
+      "demand_mw": 2157.27,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 54.2395679460766
+    },
+    {
+      "timestamp": "2025-10-16T02:00:00-07:00",
+      "demand_mw": 2088.26,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 55.28433556649092
+    },
+    {
+      "timestamp": "2025-10-16T03:00:00-07:00",
+      "demand_mw": 2040.32,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 55.30638609119496
+    },
+    {
+      "timestamp": "2025-10-16T04:00:00-07:00",
+      "demand_mw": 2062.42,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 55.48332918661717
+    },
+    {
+      "timestamp": "2025-10-16T05:00:00-07:00",
+      "demand_mw": 2159.67,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 55.935310749498704
+    },
+    {
+      "timestamp": "2025-10-16T06:00:00-07:00",
+      "demand_mw": 2363.7,
+      "is_anomaly": true,
+      "severity": "medium",
+      "confidence": 59.32120175793193
+    },
+    {
+      "timestamp": "2025-10-16T07:00:00-07:00",
+      "demand_mw": 2499.1,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 56.21437385108169
+    },
+    {
+      "timestamp": "2025-10-16T08:00:00-07:00",
+      "demand_mw": 2586.11,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 55.759771818717695
+    },
+    {
+      "timestamp": "2025-10-16T09:00:00-07:00",
+      "demand_mw": 2602.75,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.21083368044596
+    },
+    {
+      "timestamp": "2025-10-16T10:00:00-07:00",
+      "demand_mw": 2597.32,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 52.578132245723395
+    },
+    {
+      "timestamp": "2025-10-16T11:00:00-07:00",
+      "demand_mw": 2574.6,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 51.34412967784987
+    },
+    {
+      "timestamp": "2025-10-16T12:00:00-07:00",
+      "demand_mw": 2590.29,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 50.6930378092087
+    },
+    {
+      "timestamp": "2025-10-16T13:00:00-07:00",
+      "demand_mw": 2629.25,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 50.64144411361975
+    },
+    {
+      "timestamp": "2025-10-16T14:00:00-07:00",
+      "demand_mw": 2725.32,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 52.34642018405646
+    },
+    {
+      "timestamp": "2025-10-16T15:00:00-07:00",
+      "demand_mw": 2834.23,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.571278570642676
+    },
+    {
+      "timestamp": "2025-10-16T16:00:00-07:00",
+      "demand_mw": 2932.27,
+      "is_anomaly": false,
+      "severity": "normal",
+      "confidence": 53.95850917148025
     }
   ]
 }

@@ -63,7 +63,7 @@ export interface Recommendation {
     confidence: number;
     time_str: string;
     date_str: string;
-  };
+  } | null;
   analysis?: {
     anomaly_type: string;
     primary_diagnosis: string;

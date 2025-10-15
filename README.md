@@ -4,7 +4,7 @@
 
 A production-ready dashboard with machine learning capabilities that provides LADWP operators with real-time visibility into California ISO (CAISO) grid conditions, enabling proactive decision-making and operational optimization.
 
-**Status:** Phase 1 ✅ Complete | Phase 2 ✅ Complete | Phase 3 🔄 In Progress
+**Status:** ✅ Production Ready | All Phases Complete | Month-Specific ML Models Deployed
 
 ---
 
@@ -76,10 +76,10 @@ Traditional grid operations rely on:
 - Capacity margin calculations
 - Off-peak optimization opportunities
 
-#### 4. **ML-Powered Anomaly Detection** ✨ NEW
+#### 4. **ML-Powered Anomaly Detection** ✨ PRODUCTION
 - 12 month-specific machine learning models
 - Automatic model selection by current month
-- Future anomaly prediction (48-hour horizon)
+- Future anomaly prediction (30-hour horizon)
 - Severity classification (normal/medium/high/critical)
 - Confidence scoring (0-100%)
 - 95% reduction in false positives vs generic models
@@ -382,7 +382,76 @@ Internal use only - LADWP proprietary.
 
 ---
 
-## 🤖 Machine Learning System (Phase 2 Complete)
+## 📁 Project Structure
+
+```
+LADWP/
+├── 📄 Core Application Files
+│   ├── api_server.py                    # FastAPI backend server
+│   ├── caiso_api_client.py             # CAISO OASIS API client
+│   ├── price_forecast.py               # Price prediction engine
+│   ├── recommendation_engine.py        # Basic recommendation system
+│   ├── llm_recommendation_engine.py    # AI-powered recommendations
+│   ├── anomaly_based_recommendations.py # ML-based recommendations
+│   ├── requirements.txt                # Python dependencies
+│   ├── start.ps1                       # Windows startup script
+│   └── setup_api_key.example.ps1      # API key setup template
+│
+├── 🎨 Frontend/
+│   ├── src/                            # React TypeScript application
+│   │   ├── components/                 # Reusable UI components
+│   │   ├── pages/                      # Dashboard pages
+│   │   ├── api/                        # API client utilities
+│   │   └── types/                      # TypeScript definitions
+│   ├── package.json                    # Node.js dependencies
+│   └── vite.config.ts                  # Build configuration
+│
+├── � Models/
+│   ├── anomaly_detector.py             # Core anomaly detection
+│   ├── baseline_patterns.py            # Baseline pattern analyzer
+│   ├── future_anomaly_predictor.py     # 30-hour prediction engine
+│   ├── trained_models/                 # 12 monthly ML models (.pkl)
+│   │   ├── january_demand_anomaly_detector.pkl
+│   │   ├── february_demand_anomaly_detector.pkl
+│   │   └── ... (one for each month)
+│   ├── predictions/                    # Generated predictions
+│   │   ├── latest_predictions.json
+│   │   ├── january_predictions.json
+│   │   └── ... (one for each month)
+│   └── baseline_data/                  # Historical baselines
+│       └── patterns.json
+│
+├── 📊 Data/
+│   ├── data_collector.py               # Historical data collection
+│   ├── historical_data/                # SQLite database
+│   │   └── ladwp_grid_data.db
+│   ├── recommendations.json            # Generated recommendations
+│   ├── price_forecast.json             # Price predictions
+│   └── anomaly_recommendations.json    # ML-based alerts
+│
+├── 🔧 Scripts/
+│   ├── collect_all_months.py           # Collect training data
+│   ├── train_all_monthly_models.py     # Train 12 models
+│   ├── generate_all_predictions.py     # Generate predictions
+│   ├── retrain_all.py                  # Retrain all models
+│   └── generate_mock_november_data.py  # Test data generator
+│
+├── 🧪 Tests/
+│   ├── test_month_transition.py        # Month transition tests
+│   ├── test_november_baseline.py       # Baseline validation
+│   └── test_api.html                   # API testing interface
+│
+└── 📚 Docs/
+    ├── AI_ANOMALY_RECOMMENDATIONS.md   # AI recommendation system
+    ├── LLM_ARCHITECTURE.md             # LLM integration guide
+    ├── MONTHLY_MODELS_GUIDE.md         # Model training guide
+    ├── USAGE_GUIDE.md                  # Operational guide
+    └── ... (additional documentation)
+```
+
+---
+
+## 🤖 Machine Learning System (Production Ready)
 
 ### **Monthly Model Architecture**
 The system uses 12 specialized Isolation Forest models, one for each month:

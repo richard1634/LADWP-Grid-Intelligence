@@ -8,7 +8,7 @@ import type {
   APIResponse,
 } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -85,14 +85,22 @@ export const api = {
     return data.success ? data.data : null;
   },
 
-  // Recommendations
-  getRecommendations: async (month?: string): Promise<Recommendations | null> => {
-    const params = month ? { month } : {};
-    const { data} = await apiClient.get<APIResponse<Recommendations>>(
-      '/api/recommendations',
-      { params }
-    );
-    return data.success ? data.data : null;
+  // Generate AI recommendation for a specific anomaly
+  generateAnomalyRecommendation: async (anomaly: any): Promise<any> => {
+    console.log('[API] Generating AI recommendation for anomaly...', anomaly);
+    try {
+      const { data } = await apiClient.post<APIResponse<any>>(
+        '/api/generate-anomaly-recommendation',
+        { anomaly },
+        { timeout: 30000 } // 30 seconds for single anomaly analysis
+      );
+      console.log('[API] Response received:', data);
+      return data.success ? data.data : null;
+    } catch (error: any) {
+      console.error('[API] Error generating recommendation:', error);
+      console.error('[API] Error response:', error.response?.data);
+      throw error;
+    }
   },
 
   // Health Check
@@ -106,4 +114,13 @@ export const api = {
   },
 };
 
-export default apiClient;
+// Explicitly export for better HMR
+export { api as default };
+export const { 
+  getGridStatus, 
+  getDemandForecast, 
+  getPrices, 
+  getMLPredictions, 
+  generateAnomalyRecommendation, 
+  healthCheck 
+} = api;

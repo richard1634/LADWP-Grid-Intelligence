@@ -36,9 +36,9 @@ export function DemandForecastChart({ data }: DemandForecastChartProps) {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="mb-4">
-        <h3 className="text-xl font-bold text-gray-800">System Demand - Next 48 Hours</h3>
+        <h3 className="text-xl font-bold text-gray-800">System Demand - Last 24h & Next 30h</h3>
         <p className="text-sm text-gray-600 mt-1">
-          Blue line shows historical data, orange line shows ML forecast
+          Blue line shows last 24 hours historical, orange line shows CAISO 30-hour forecast
         </p>
       </div>
 

@@ -162,17 +162,19 @@ class CAISOClient:
             print(f"   ❌ API Request Error: {e}")
             return None
     
-    def get_system_demand(self, date: Optional[datetime] = None, hours_ahead: int = 48) -> pd.DataFrame:
+    def get_system_demand(self, date: Optional[datetime] = None, hours_ahead: int = 54) -> pd.DataFrame:
         """
         Get CAISO system demand (load) forecast data
         Query: SLD_FCST (System Load Forecast)
         
         Args:
             date: Start date for forecast (default: now)
-            hours_ahead: How many hours ahead to forecast (default: 48 for 2 days)
+            hours_ahead: How many hours from start of day to fetch (default: 54)
+                        This captures last 24h historical + next 30h forecast
         
         Note: Uses DAM (Day-Ahead Market) which provides ~30 hours of future forecasts,
-              vs RTM (Real-Time Market) which only provides ~30 minutes ahead
+              vs RTM (Real-Time Market) which only provides ~30 minutes ahead.
+              Request from start of day to get both historical and forecast data.
         """
         if date is None:
             date = datetime.now(self.pacific_tz)

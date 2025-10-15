@@ -1,0 +1,311 @@
+{
+  "generated_at": "2025-10-15T12:52:32.427557",
+  "model_type": "november_mock_test",
+  "model_month": "november",
+  "forecast_period": "2025-11-01 12:00:00 to 2025-11-02 17:00:00",
+  "total_points": 30,
+  "anomalies_detected": 7,
+  "anomaly_rate": 23.333333333333332,
+  "predictions": [
+    {
+      "timestamp": "2025-11-01 12:00:00",
+      "demand_mw": 2498.91,
+      "is_anomaly": false,
+      "anomaly_score": -0.564495507083249,
+      "severity": "normal",
+      "confidence": 56.4495507083249,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 13:00:00",
+      "demand_mw": 2287.16,
+      "is_anomaly": false,
+      "anomaly_score": -0.5620669427129001,
+      "severity": "normal",
+      "confidence": 56.20669427129001,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 14:00:00",
+      "demand_mw": 2398.16,
+      "is_anomaly": false,
+      "anomaly_score": -0.5633470077414245,
+      "severity": "normal",
+      "confidence": 56.334700774142455,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 15:00:00",
+      "demand_mw": 2406.02,
+      "is_anomaly": false,
+      "anomaly_score": -0.5632242396681278,
+      "severity": "normal",
+      "confidence": 56.322423966812785,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 16:00:00",
+      "demand_mw": 2559.91,
+      "is_anomaly": false,
+      "anomaly_score": -0.5666631266208842,
+      "severity": "normal",
+      "confidence": 56.66631266208842,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 17:00:00",
+      "demand_mw": 2638.99,
+      "is_anomaly": false,
+      "anomaly_score": -0.5677664928247135,
+      "severity": "normal",
+      "confidence": 56.77664928247135,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 18:00:00",
+      "demand_mw": 3850.0,
+      "is_anomaly": true,
+      "anomaly_score": -0.5865606607345057,
+      "severity": "high",
+      "confidence": 58.656066073450575,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": 2507.88
+    },
+    {
+      "timestamp": "2025-11-01 19:00:00",
+      "demand_mw": 2765.06,
+      "is_anomaly": false,
+      "anomaly_score": -0.5758311745966019,
+      "severity": "normal",
+      "confidence": 57.583117459660194,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 20:00:00",
+      "demand_mw": 2249.18,
+      "is_anomaly": false,
+      "anomaly_score": -0.5603403243597314,
+      "severity": "normal",
+      "confidence": 56.03403243597314,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 21:00:00",
+      "demand_mw": 2302.55,
+      "is_anomaly": false,
+      "anomaly_score": -0.561703981858016,
+      "severity": "normal",
+      "confidence": 56.170398185801595,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 22:00:00",
+      "demand_mw": 2015.25,
+      "is_anomaly": false,
+      "anomaly_score": -0.5703353119543071,
+      "severity": "normal",
+      "confidence": 57.03353119543071,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-01 23:00:00",
+      "demand_mw": 1963.56,
+      "is_anomaly": true,
+      "anomaly_score": -0.5795762027600457,
+      "severity": "high",
+      "confidence": 57.957620276004576,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 00:00:00",
+      "demand_mw": 1872.01,
+      "is_anomaly": true,
+      "anomaly_score": -0.5822917021692631,
+      "severity": "high",
+      "confidence": 58.229170216926306,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 01:00:00",
+      "demand_mw": 1952.49,
+      "is_anomaly": true,
+      "anomaly_score": -0.5820947501863616,
+      "severity": "high",
+      "confidence": 58.209475018636155,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 02:00:00",
+      "demand_mw": 1982.96,
+      "is_anomaly": false,
+      "anomaly_score": -0.5758978851702067,
+      "severity": "normal",
+      "confidence": 57.589788517020665,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 03:00:00",
+      "demand_mw": 1937.54,
+      "is_anomaly": true,
+      "anomaly_score": -0.5826858060739509,
+      "severity": "high",
+      "confidence": 58.268580607395094,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 04:00:00",
+      "demand_mw": 1924.97,
+      "is_anomaly": true,
+      "anomaly_score": -0.5822917021692631,
+      "severity": "high",
+      "confidence": 58.229170216926306,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 05:00:00",
+      "demand_mw": 1904.31,
+      "is_anomaly": true,
+      "anomaly_score": -0.5822917021692631,
+      "severity": "high",
+      "confidence": 58.229170216926306,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 06:00:00",
+      "demand_mw": 2075.55,
+      "is_anomaly": false,
+      "anomaly_score": -0.5684154415022041,
+      "severity": "normal",
+      "confidence": 56.841544150220415,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 07:00:00",
+      "demand_mw": 2173.81,
+      "is_anomaly": false,
+      "anomaly_score": -0.5655391482022067,
+      "severity": "normal",
+      "confidence": 56.553914820220676,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 08:00:00",
+      "demand_mw": 2322.86,
+      "is_anomaly": false,
+      "anomaly_score": -0.5609912173595221,
+      "severity": "normal",
+      "confidence": 56.09912173595221,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 09:00:00",
+      "demand_mw": 2232.66,
+      "is_anomaly": false,
+      "anomaly_score": -0.560301012589156,
+      "severity": "normal",
+      "confidence": 56.0301012589156,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 10:00:00",
+      "demand_mw": 2358.21,
+      "is_anomaly": false,
+      "anomaly_score": -0.5630386813855786,
+      "severity": "normal",
+      "confidence": 56.30386813855785,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 11:00:00",
+      "demand_mw": 2240.85,
+      "is_anomaly": false,
+      "anomaly_score": -0.5599220488070282,
+      "severity": "normal",
+      "confidence": 55.99220488070282,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 12:00:00",
+      "demand_mw": 2594.54,
+      "is_anomaly": false,
+      "anomaly_score": -0.5661364159588705,
+      "severity": "normal",
+      "confidence": 56.61364159588705,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 13:00:00",
+      "demand_mw": 2408.42,
+      "is_anomaly": false,
+      "anomaly_score": -0.5632242396681278,
+      "severity": "normal",
+      "confidence": 56.322423966812785,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 14:00:00",
+      "demand_mw": 2375.7,
+      "is_anomaly": false,
+      "anomaly_score": -0.5629120550346782,
+      "severity": "normal",
+      "confidence": 56.29120550346782,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 15:00:00",
+      "demand_mw": 2285.85,
+      "is_anomaly": false,
+      "anomaly_score": -0.5620669427129001,
+      "severity": "normal",
+      "confidence": 56.20669427129001,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 16:00:00",
+      "demand_mw": 2460.52,
+      "is_anomaly": false,
+      "anomaly_score": -0.5628865117598117,
+      "severity": "normal",
+      "confidence": 56.28865117598117,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    },
+    {
+      "timestamp": "2025-11-02 17:00:00",
+      "demand_mw": 2760.84,
+      "is_anomaly": false,
+      "anomaly_score": -0.5750525025692093,
+      "severity": "normal",
+      "confidence": 57.505250256920924,
+      "explanation": "Simulated November anomaly: Unexpected cold snap causing heating surge",
+      "predicted_demand": NaN
+    }
+  ]
+}
