@@ -93,8 +93,8 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
       </div>
 
       {/* Line Chart */}
-      <ResponsiveContainer width="100%" height={350}>
-        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+      <ResponsiveContainer width="100%" height={300} className="sm:h-[350px]">
+        <LineChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 50 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
             dataKey="dateValue" 
@@ -108,15 +108,18 @@ export function MLAnomalyChart({ data }: MLAnomalyChartProps) {
                 hour: 'numeric'
               });
             }}
-            label={{ value: 'Date & Time', position: 'insideBottom', offset: -10, style: { fontSize: 12 } }}
-            tick={{ fontSize: 10, textAnchor: 'end' }}
+            label={{ value: 'Date & Time', position: 'insideBottom', offset: -10, style: { fontSize: 10 } }}
+            tick={{ fontSize: 8, textAnchor: 'end' }}
             angle={-45}
             height={60}
+            className="sm:text-[10px]"
           />
           <YAxis 
             dataKey="value"
-            label={{ value: 'Predicted Demand (MW)', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
-            tick={{ fontSize: 11 }}
+            label={{ value: 'Demand (MW)', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
+            tick={{ fontSize: 9 }}
+            width={45}
+            className="sm:text-[11px] sm:w-[55px]"
           />
           <Tooltip 
             contentStyle={{ 

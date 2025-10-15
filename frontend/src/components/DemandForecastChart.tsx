@@ -34,28 +34,31 @@ export function DemandForecastChart({ data }: DemandForecastChartProps) {
   const currentDemand = forecastStartIndex > 0 ? data[forecastStartIndex - 1].demand_mw : data[0].demand_mw;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="mb-4">
-        <h3 className="text-xl font-bold text-gray-800">System Demand - Last 24h & Next 30h</h3>
-        <p className="text-sm text-gray-600 mt-1">
+    <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6">
+      <div className="mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-xl font-bold text-gray-800">System Demand - Last 24h & Next 30h</h3>
+        <p className="text-xs sm:text-sm text-gray-600 mt-1">
           Blue line shows last 24 hours historical, orange line shows CAISO 30-hour forecast
         </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
+        <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
             dataKey="time" 
             angle={-45}
             textAnchor="end"
-            height={100}
-            tick={{ fontSize: 11 }}
-            interval={Math.floor(chartData.length / 12)} // Show ~12 labels
+            height={80}
+            tick={{ fontSize: 9 }}
+            interval={Math.floor(chartData.length / 6)} // Show fewer labels on mobile
+            className="sm:text-[11px]"
           />
           <YAxis 
-            label={{ value: 'Demand (MW)', angle: -90, position: 'insideLeft' }}
-            tick={{ fontSize: 12 }}
+            label={{ value: 'Demand (MW)', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
+            tick={{ fontSize: 10 }}
+            width={45}
+            className="sm:text-xs sm:w-[60px]"
           />
           <Tooltip 
             contentStyle={{ 

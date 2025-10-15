@@ -40,28 +40,31 @@ export function PriceChart({ data }: PriceChartProps) {
   const spikeCount = chartData.filter(d => d.isSpike).length;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="mb-4">
-        <h3 className="text-xl font-bold text-gray-800">Real-Time Energy Prices</h3>
-        <p className="text-sm text-gray-600 mt-1">
+    <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6">
+      <div className="mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-xl font-bold text-gray-800">Real-Time Energy Prices</h3>
+        <p className="text-xs sm:text-sm text-gray-600 mt-1">
           Last 6 hours | Red dots indicate price spikes
         </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
+        <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
             dataKey="time" 
             angle={-45}
             textAnchor="end"
-            height={80}
-            tick={{ fontSize: 11 }}
+            height={70}
+            tick={{ fontSize: 9 }}
+            className="sm:text-[11px]"
           />
           <YAxis 
-            label={{ value: 'Price ($/MWh)', angle: -90, position: 'insideLeft' }}
-            tick={{ fontSize: 12 }}
+            label={{ value: 'Price ($/MWh)', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
+            tick={{ fontSize: 10 }}
             domain={[0, 'auto']}
+            width={50}
+            className="sm:text-xs sm:w-[60px]"
           />
           <Tooltip 
             contentStyle={{ 

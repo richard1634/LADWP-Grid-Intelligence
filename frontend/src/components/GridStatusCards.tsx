@@ -21,9 +21,9 @@ const stressConfig = {
 export function GridStatusCards({ data, isLoading }: GridStatusCardsProps) {
   if (isLoading || !data) {
     return (
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold text-ladwp-blue">📊 Current Grid Status</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="space-y-4 sm:space-y-6">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-ladwp-blue">📊 Current Grid Status</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {[...Array(4)].map((_, i) => (
             <LoadingCard key={i} />
           ))}
@@ -38,7 +38,7 @@ export function GridStatusCards({ data, isLoading }: GridStatusCardsProps) {
     <section className="space-y-6">
       <h2 className="text-2xl font-bold text-ladwp-blue">📊 Current Grid Status</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <MetricCard
           icon={Zap}
           label="System Demand"

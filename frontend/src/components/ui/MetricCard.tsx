@@ -37,15 +37,15 @@ export function MetricCard({
   return (
     <Card hover className="relative overflow-hidden">
       <div className="flex items-start justify-between">
-        <div className={cn('p-3 rounded-lg', colorMap[color])}>
-          <Icon className="w-6 h-6" />
+        <div className={cn('p-2 sm:p-3 rounded-lg', colorMap[color])}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
         {badge && <div className="ml-2">{badge}</div>}
       </div>
 
-      <div className="mt-4">
-        <p className="text-sm font-medium text-gray-600">{label}</p>
-        <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+      <div className="mt-3 sm:mt-4">
+        <p className="text-xs sm:text-sm font-medium text-gray-600">{label}</p>
+        <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 sm:mt-2">{value}</p>
 
         {delta !== undefined && (
           <motion.div

@@ -102,20 +102,20 @@ export function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <header className="bg-white shadow-md border-b-4 border-ladwp-accent">
-        <div className="container mx-auto px-6 py-6">
+        <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-6">
           <div>
-            <h1 className="text-3xl font-bold text-ladwp-blue border-b-4 border-ladwp-accent pb-2 inline-block">
-              ⚡ Los Angeles Department of Water & Power
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-ladwp-blue border-b-4 border-ladwp-accent pb-2 inline-block">
+              ⚡ LADWP Grid Intelligence
             </h1>
-            <h2 className="text-xl font-semibold text-ladwp-light-blue mt-2">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-ladwp-light-blue mt-2">
               Real-Time Grid Intelligence Dashboard
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 mt-2 hidden sm:block">
               Live CAISO grid monitoring with predictive analytics for operational excellence
             </p>
           </div>
           
-          <div className="flex gap-4 mt-4 text-sm">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 text-xs sm:text-sm">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-gray-700">Connected to CAISO OASIS</span>
@@ -134,12 +134,12 @@ export function Dashboard() {
                   const value = e.target.value;
                   setRefreshInterval(value === 'manual' ? false : parseInt(value));
                 }}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                className="px-2 sm:px-3 py-1 border border-gray-300 rounded-md text-xs sm:text-sm"
               >
                 <option value="manual">Manual</option>
-                <option value="30000">30 seconds</option>
-                <option value="60000">1 minute</option>
-                <option value="300000">5 minutes</option>
+                <option value="30000">30 sec</option>
+                <option value="60000">1 min</option>
+                <option value="300000">5 min</option>
               </select>
             </div>
           </div>
@@ -148,37 +148,39 @@ export function Dashboard() {
 
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-center space-x-2">
+        <div className="container mx-auto px-3 sm:px-6">
+          <div className="flex items-center justify-center space-x-1 sm:space-x-2">
             <button
               onClick={() => setActiveTab('demand')}
-              className={`py-4 px-8 border-b-3 font-semibold text-base transition-all duration-200 flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-3 sm:px-8 border-b-3 font-semibold text-xs sm:text-base transition-all duration-200 flex items-center gap-1 sm:gap-2 ${
                 activeTab === 'demand'
                   ? 'border-ladwp-blue text-ladwp-blue bg-blue-50/50'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
-              <span className="text-lg">⚡</span>
-              <span>Demand & AI Analysis</span>
+              <span className="text-base sm:text-lg">⚡</span>
+              <span className="hidden sm:inline">Demand & AI Analysis</span>
+              <span className="sm:hidden">Demand</span>
             </button>
-            <div className="h-8 w-px bg-gray-300"></div>
+            <div className="h-6 sm:h-8 w-px bg-gray-300"></div>
             <button
               onClick={() => setActiveTab('price')}
-              className={`py-4 px-8 border-b-3 font-semibold text-base transition-all duration-200 flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-3 sm:px-8 border-b-3 font-semibold text-xs sm:text-base transition-all duration-200 flex items-center gap-1 sm:gap-2 ${
                 activeTab === 'price'
                   ? 'border-ladwp-blue text-ladwp-blue bg-blue-50/50'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
-              <span className="text-lg">💰</span>
-              <span>Price Analysis</span>
+              <span className="text-base sm:text-lg">💰</span>
+              <span className="hidden sm:inline">Price Analysis</span>
+              <span className="sm:hidden">Price</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8 space-y-12">
+      <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-12">
         {/* Data Source Information Banner - Collapsible */}
         <section className="bg-blue-50 border-2 border-blue-200 rounded-xl shadow-lg">
           <div 
@@ -241,15 +243,15 @@ export function Dashboard() {
             {/* Section 1: Current Grid Status */}
             <GridStatusCards data={gridStatus} isLoading={gridLoading} />
 
-            {/* Section 2: Demand Forecast */}
-            <section>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-ladwp-blue">
-              📊 LADWP Demand Forecast - Last 24 Hours & Next 30 Hours
+        {/* Section 2: Demand Forecast Chart */}
+        <section>
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-ladwp-blue">
+              📊 LADWP Demand Forecast
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              LADWP-specific load data from CAISO TAC area (typical range: 2,000-6,200 MW). 
-              Historical data (blue) shows last 24 hours of actual measured demand, forecast (orange) shows CAISO Day-Ahead Market predictions up to 30 hours ahead.
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+              <span className="hidden sm:inline">LADWP-specific load data from CAISO TAC area (typical range: 2,000-6,200 MW). </span>
+              Historical data (blue) shows last 24 hours<span className="hidden sm:inline"> of actual measured demand</span>, forecast (orange) shows <span className="hidden sm:inline">CAISO Day-Ahead Market predictions</span> next 30 hours<span className="hidden sm:inline"> ahead</span>.
             </p>
           </div>
           {demandLoading ? (
@@ -267,13 +269,13 @@ export function Dashboard() {
 
         {/* Section 2.5: AI-Powered Analysis (Integrated) */}
         <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-ladwp-blue">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-ladwp-blue">
               🤖 AI-Powered Grid Intelligence
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Machine learning model trained on historical LADWP demand patterns using <strong>October 2025</strong> month-specific data. 
-              Detects unusual demand anomalies and generates intelligent recommendations using GPT-3.5 for proactive grid management.
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+              <span className="hidden sm:inline">Machine learning model trained on historical LADWP demand patterns using <strong>October 2025</strong> month-specific data. </span>
+              Detects unusual demand anomalies and generates <span className="hidden sm:inline">intelligent </span>recommendations<span className="hidden sm:inline"> using GPT-3.5</span> for proactive grid management.
             </p>
           </div>
 
