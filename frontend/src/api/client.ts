@@ -9,6 +9,10 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
+// Debug: Log the API URL being used
+console.log('🌐 API Base URL:', API_BASE_URL);
+console.log('🔧 Environment:', import.meta.env.MODE);
+
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -20,7 +24,7 @@ const apiClient = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`[API] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
     return config;
   },
   (error) => {
