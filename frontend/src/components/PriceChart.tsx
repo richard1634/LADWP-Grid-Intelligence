@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Scatter, ScatterChart, ZAxis } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import type { PriceDataPoint } from '../types';
 
 interface PriceChartProps {
@@ -38,9 +38,6 @@ export function PriceChart({ data }: PriceChartProps) {
   const maxPrice = Math.max(...prices);
   const minPrice = Math.min(...prices);
   const spikeCount = chartData.filter(d => d.isSpike).length;
-
-  // Separate spike data for highlighting
-  const spikeData = chartData.filter(d => d.isSpike);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">

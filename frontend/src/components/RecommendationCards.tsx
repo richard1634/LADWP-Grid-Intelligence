@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, AlertTriangle, Info } from 'lucide-react';
-import type { Recommendations, Recommendation } from '../types';
+import type { Recommendations } from '../types';
 import { Badge } from './ui/Badge';
 
 interface RecommendationCardsProps {

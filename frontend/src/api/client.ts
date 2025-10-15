@@ -4,7 +4,6 @@ import type {
   DemandDataPoint,
   PriceDataPoint,
   MLPredictions,
-  Recommendations,
   APIResponse,
 } from '../types';
 

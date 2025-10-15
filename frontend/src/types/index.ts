@@ -15,6 +15,7 @@ export interface DemandDataPoint {
   timestamp: string;
   demand_mw: number;
   area?: string;
+  is_forecast?: boolean;
 }
 
 export interface PriceDataPoint {
