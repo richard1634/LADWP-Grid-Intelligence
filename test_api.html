@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LADWP API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #003DA5;
+        }
+        .endpoint {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .loading {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        pre {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #003DA5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0066CC;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔌 LADWP API Connection Test</h1>
+    <button onclick="testAllEndpoints()">Test All Endpoints</button>
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        const endpoints = [
+            { path: '/', name: 'Health Check' },
+            { path: '/api/grid-status', name: 'Grid Status' },
+            { path: '/api/demand-forecast', name: 'Demand Forecast' },
+            { path: '/api/prices', name: 'Prices' },
+            { path: '/api/ml-predictions', name: 'ML Predictions' },
+            { path: '/api/recommendations', name: 'Recommendations' },
+        ];
+
+        async function testEndpoint(endpoint) {
+            const resultDiv = document.getElementById(`result-${endpoint.path.replace(/\//g, '-')}`);
+            resultDiv.innerHTML = `<span class="loading">⏳ Loading...</span>`;
+
+            try {
+                const response = await fetch(API_BASE + endpoint.path);
+                const data = await response.json();
+
+                if (response.ok) {
+                    let summary = '';
+                    if (data.data) {
+                        if (Array.isArray(data.data)) {
+                            summary = `${data.data.length} items`;
+                        } else if (typeof data.data === 'object') {
+                            summary = `${Object.keys(data.data).length} fields`;
+                        }
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <span class="success">✓ SUCCESS</span> ${summary}
+                        <pre>${JSON.stringify(data, null, 2).substring(0, 500)}${JSON.stringify(data).length > 500 ? '...' : ''}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <span class="error">✗ ERROR ${response.status}</span>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <span class="error">✗ FAILED</span>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testAllEndpoints() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            for (const endpoint of endpoints) {
+                const endpointDiv = document.createElement('div');
+                endpointDiv.className = 'endpoint';
+                endpointDiv.innerHTML = `
+                    <h3>${endpoint.name}</h3>
+                    <code>${endpoint.path}</code>
+                    <div id="result-${endpoint.path.replace(/\//g, '-')}">
+                        <span class="loading">⏳ Waiting...</span>
+                    </div>
+                `;
+                resultsDiv.appendChild(endpointDiv);
+            }
+
+            for (const endpoint of endpoints) {
+                await testEndpoint(endpoint);
+            }
+        }
+
+        // Auto-run on page load
+        window.addEventListener('load', testAllEndpoints);
+    </script>
+</body>
+</html>

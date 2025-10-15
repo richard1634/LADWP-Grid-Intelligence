@@ -1,49 +1,29 @@
 {
-  "generated_at": "2025-10-14T14:39:08.524213",
-  "current_demand_mw": 2312.21,
+  "generated_at": "2025-10-14T23:03:07.674664",
+  "current_demand_mw": 2136.32,
   "battery_soc": 0.55,
-  "total_recommendations": 4,
-  "total_potential_savings": 197071.18195261538,
+  "total_recommendations": 2,
+  "total_potential_savings": 126270.36627200003,
   "high_priority_count": 0,
   "recommendations": [
     {
       "action": "BATTERY_CHARGE",
       "title": "Charge Battery Storage",
-      "reason": "Low price period ($54.86/MWh) detected",
+      "reason": "Low price period ($67.57/MWh) detected",
       "details": "Charge 40.0 MWh to battery (SOC: 55%)",
       "priority": "MEDIUM",
-      "estimated_savings": 3586.16,
+      "estimated_savings": 3026.92,
       "time_window": "12:00 AM - 04:00 AM",
       "confidence": 0.75
     },
     {
-      "action": "PRICE_ARBITRAGE",
-      "title": "Execute Price Arbitrage Strategy",
-      "reason": "$180.12/MWh spread detected in next 48 hours",
-      "details": "Buy at $49.17/MWh (04:00 AM), sell at $229.29/MWh (10:00 PM)",
-      "priority": "MEDIUM",
-      "estimated_savings": 4052.7000000000003,
-      "time_window": "10/15 04:00 AM - 10/14 10:00 PM",
-      "confidence": 0.8
-    },
-    {
-      "action": "DEMAND_RESPONSE",
-      "title": "Activate Demand Response Program",
-      "reason": "Price spike to $156.10/MWh detected at 03:00 PM",
-      "details": "Reduce demand by 231.2 MW for 2.0 hours",
-      "priority": "MEDIUM",
-      "estimated_savings": 60626.1462,
-      "time_window": "03:00 PM - 05:00 PM",
-      "confidence": 0.85
-    },
-    {
       "action": "LOAD_SHIFT",
       "title": "Shift Non-Critical Loads",
-      "reason": "$116.06/MWh price difference between peak and off-peak",
-      "details": "Shift 346.8 MW to off-peak hours ($54.16/MWh)",
+      "reason": "$120.19/MWh price difference between peak and off-peak",
+      "details": "Shift 320.4 MW to off-peak hours ($54.17/MWh)",
       "priority": "MEDIUM",
-      "estimated_savings": 128806.1757526154,
-      "time_window": "Peak: 03:00 PM | Off-peak: 12:00 AM",
+      "estimated_savings": 123243.44627200003,
+      "time_window": "Peak: 08:00 AM | Off-peak: 12:00 AM",
       "confidence": 0.7
     }
   ]
