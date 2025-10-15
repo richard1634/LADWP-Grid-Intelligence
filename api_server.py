@@ -535,9 +535,13 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+    import os
+    
+    port = int(os.getenv("PORT", 8000))
+    
     print("🚀 Starting LADWP Grid Intelligence API Server...")
     print("📊 Backend: Python + FastAPI")
     print("🎨 Frontend: React + TypeScript")
-    print("🌐 API: http://localhost:8000")
-    print("📚 Docs: http://localhost:8000/docs")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print(f"🌐 API: http://localhost:{port}")
+    print(f"📚 Docs: http://localhost:{port}/docs")
+    uvicorn.run(app, host="0.0.0.0", port=port)

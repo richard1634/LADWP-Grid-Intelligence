@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '../api/client';
 import { GridStatusCards } from '../components/GridStatusCards';
 import { DemandForecastChart } from '../components/DemandForecastChart';
@@ -54,6 +55,8 @@ export function Dashboard() {
   const [isGeneratingSamples, setIsGeneratingSamples] = useState(false);
   const [sampleAnomalies] = useState(generateSampleAnomalies());
   const [activeTab, setActiveTab] = useState<TabType>('demand');
+  const [isCoverageExpanded, setIsCoverageExpanded] = useState(false);
+  const [isFooterExpanded, setIsFooterExpanded] = useState(false);
 
   // Fetch grid status
   const { data: gridStatus, isLoading: gridLoading } = useQuery({
@@ -146,26 +149,29 @@ export function Dashboard() {
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-6">
-          <div className="flex space-x-8">
+          <div className="flex items-center justify-center space-x-2">
             <button
               onClick={() => setActiveTab('demand')}
-              className={`py-4 px-2 border-b-2 font-semibold text-sm transition-colors ${
+              className={`py-4 px-8 border-b-3 font-semibold text-base transition-all duration-200 flex items-center gap-2 ${
                 activeTab === 'demand'
-                  ? 'border-ladwp-blue text-ladwp-blue'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-ladwp-blue text-ladwp-blue bg-blue-50/50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
-              ⚡ Demand Forecast & AI Analysis
+              <span className="text-lg">⚡</span>
+              <span>Demand & AI Analysis</span>
             </button>
+            <div className="h-8 w-px bg-gray-300"></div>
             <button
               onClick={() => setActiveTab('price')}
-              className={`py-4 px-2 border-b-2 font-semibold text-sm transition-colors ${
+              className={`py-4 px-8 border-b-3 font-semibold text-base transition-all duration-200 flex items-center gap-2 ${
                 activeTab === 'price'
-                  ? 'border-ladwp-blue text-ladwp-blue'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-ladwp-blue text-ladwp-blue bg-blue-50/50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
-              💰 Price Analysis
+              <span className="text-lg">💰</span>
+              <span>Price Analysis</span>
             </button>
           </div>
         </div>
@@ -173,49 +179,60 @@ export function Dashboard() {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8 space-y-12">
-        {/* Data Source Information Banner */}
+        {/* Data Source Information Banner - Collapsible */}
         <section className="bg-blue-50 border-2 border-blue-200 rounded-xl shadow-lg">
-          <div className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">📍</div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-ladwp-blue mb-2">
-                  Grid Coverage & Data Sources
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">🗺️ LADWP Service Territory</p>
-                    <ul className="text-gray-700 space-y-1 ml-4">
-                      <li>• <strong>Location:</strong> Los Angeles, California</li>
-                      <li>• <strong>Coverage:</strong> 465 square miles</li>
-                      <li>• <strong>Customers:</strong> 1.5M+ electric customers</li>
-                      <li>• <strong>LADWP Peak Load:</strong> ~6,200 MW</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">📊 Real-Time Data Sources</p>
-                    <ul className="text-gray-700 space-y-1 ml-4">
-                      <li>• <strong>Demand Data:</strong> CAISO OASIS - LADWP TAC Area Load</li>
-                      <li>• <strong>Price Data:</strong> CAISO LMP - LADWP nodes (DLAP_LADWP) averaged</li>
-                      <li>• <strong>Update Frequency:</strong> 5-minute real-time intervals</li>
-                      <li>• <strong>ML Predictions:</strong> LADWP historical patterns (month-specific)</li>
-                    </ul>
-                  </div>
+          <div 
+            className="p-4 cursor-pointer hover:bg-blue-100 transition-colors flex items-center justify-between"
+            onClick={() => setIsCoverageExpanded(!isCoverageExpanded)}
+          >
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">📍</div>
+              <h3 className="text-lg font-bold text-ladwp-blue">
+                Grid Coverage & Data Sources
+              </h3>
+            </div>
+            {isCoverageExpanded ? (
+              <ChevronUp className="w-5 h-5 text-ladwp-blue" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-ladwp-blue" />
+            )}
+          </div>
+          
+          {isCoverageExpanded && (
+            <div className="px-6 pb-6 pt-2">
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-semibold text-gray-800 mb-1">🗺️ LADWP Service Territory</p>
+                  <ul className="text-gray-700 space-y-1 ml-4">
+                    <li>• <strong>Location:</strong> Los Angeles, California</li>
+                    <li>• <strong>Coverage:</strong> 465 square miles</li>
+                    <li>• <strong>Customers:</strong> 1.5M+ electric customers</li>
+                    <li>• <strong>LADWP Peak Load:</strong> ~6,200 MW</li>
+                  </ul>
                 </div>
-                <div className="mt-3 pt-3 border-t border-blue-200">
-                  <p className="text-xs text-gray-600 mb-2">
-                    <strong>✅ Data Verification:</strong> All demand forecasts are LADWP-specific, filtered from CAISO's TAC area data (typical range: 2,000-6,200 MW). 
-                    Price data is averaged across LADWP pricing nodes (DLAP_LADWP) for representative energy costs. 
-                    ML predictions use historical LADWP patterns specific to October 2025 operating conditions.
-                  </p>
-                  <p className="text-xs text-gray-500 italic">
-                    <strong>Why CAISO has LADWP data:</strong> Although LADWP operates independently, it interconnects with the CAISO grid for reliability and market participation. 
-                    CAISO tracks all interconnected loads for grid coordination, making this data available via their public OASIS API for transparency and operational planning.
-                  </p>
+                <div>
+                  <p className="font-semibold text-gray-800 mb-1">📊 Real-Time Data Sources</p>
+                  <ul className="text-gray-700 space-y-1 ml-4">
+                    <li>• <strong>Demand Data:</strong> CAISO OASIS - LADWP TAC Area Load</li>
+                    <li>• <strong>Price Data:</strong> CAISO LMP - LADWP nodes (DLAP_LADWP) averaged</li>
+                    <li>• <strong>Update Frequency:</strong> 5-minute real-time intervals</li>
+                    <li>• <strong>ML Predictions:</strong> LADWP historical patterns (month-specific)</li>
+                  </ul>
                 </div>
               </div>
+              <div className="mt-3 pt-3 border-t border-blue-200">
+                <p className="text-xs text-gray-600 mb-2">
+                  <strong>✅ Data Verification:</strong> All demand forecasts are LADWP-specific, filtered from CAISO's TAC area data (typical range: 2,000-6,200 MW). 
+                  Price data is averaged across LADWP pricing nodes (DLAP_LADWP) for representative energy costs. 
+                  ML predictions use historical LADWP patterns specific to October 2025 operating conditions.
+                </p>
+                <p className="text-xs text-gray-500 italic">
+                  <strong>Why CAISO has LADWP data:</strong> Although LADWP operates independently, it interconnects with the CAISO grid for reliability and market participation. 
+                  CAISO tracks all interconnected loads for grid coordination, making this data available via their public OASIS API for transparency and operational planning.
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </section>
 
         {/* Demand Forecast & AI Analysis Tab */}
@@ -379,39 +396,58 @@ export function Dashboard() {
         )}
       </main>
 
-      {/* Footer */}
+      {/* Footer - Collapsible Technical Details */}
       <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-6 py-6">
-          <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-600">
-            <div>
-              <h4 className="font-semibold text-ladwp-blue mb-2">📡 Data Sources</h4>
-              <ul className="space-y-1">
-                <li>• <strong>Grid Operator:</strong> CAISO (California ISO)</li>
-                <li>• <strong>API:</strong> OASIS Real-Time Market Data</li>
-                <li>• <strong>Load Data:</strong> LADWP TAC Area (SLD_FCST filtered)</li>
-                <li>• <strong>Price Nodes:</strong> LADWP DLAP (averaged)</li>
-              </ul>
+        <div className="container mx-auto px-6 py-4">
+          <div 
+            className="cursor-pointer hover:bg-gray-50 transition-colors py-2 px-4 rounded flex items-center justify-between"
+            onClick={() => setIsFooterExpanded(!isFooterExpanded)}
+          >
+            <div className="text-sm font-semibold text-ladwp-blue">
+              📋 Technical Details & Data Sources
             </div>
-            <div>
-              <h4 className="font-semibold text-ladwp-blue mb-2">🗺️ Service Area</h4>
-              <ul className="space-y-1">
-                <li>• <strong>Location:</strong> Los Angeles, California</li>
-                <li>• <strong>Territory:</strong> 465 sq mi (1,204 km²)</li>
-                <li>• <strong>Customers:</strong> 1.5M+ electric customers</li>
-                <li>• <strong>Typical Load:</strong> 2,000-4,000 MW (off-peak) | ~6,200 MW (peak)</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-ladwp-blue mb-2">⚙️ Technical Details</h4>
-              <ul className="space-y-1">
-                <li>• <strong>Update Frequency:</strong> 5-minute intervals</li>
-                <li>• <strong>Forecast Horizon:</strong> 30 hours ahead (CAISO DAM)</li>
-                <li>• <strong>Historical Window:</strong> Last 24 hours</li>
-                <li>• <strong>ML Model:</strong> Month-specific (October 2025)</li>
-              </ul>
-            </div>
+            {isFooterExpanded ? (
+              <ChevronUp className="w-4 h-4 text-ladwp-blue" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-ladwp-blue" />
+            )}
           </div>
-          <div className="mt-6 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
+          
+          {isFooterExpanded && (
+            <div className="mt-4 pb-2">
+              <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-600">
+                <div>
+                  <h4 className="font-semibold text-ladwp-blue mb-2">📡 Data Sources</h4>
+                  <ul className="space-y-1">
+                    <li>• <strong>Grid Operator:</strong> CAISO (California ISO)</li>
+                    <li>• <strong>API:</strong> OASIS Real-Time Market Data</li>
+                    <li>• <strong>Load Data:</strong> LADWP TAC Area (SLD_FCST filtered)</li>
+                    <li>• <strong>Price Nodes:</strong> LADWP DLAP (averaged)</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-ladwp-blue mb-2">🗺️ Service Area</h4>
+                  <ul className="space-y-1">
+                    <li>• <strong>Location:</strong> Los Angeles, California</li>
+                    <li>• <strong>Territory:</strong> 465 sq mi (1,204 km²)</li>
+                    <li>• <strong>Customers:</strong> 1.5M+ electric customers</li>
+                    <li>• <strong>Typical Load:</strong> 2,000-4,000 MW (off-peak) | ~6,200 MW (peak)</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-ladwp-blue mb-2">⚙️ Technical Details</h4>
+                  <ul className="space-y-1">
+                    <li>• <strong>Update Frequency:</strong> 5-minute intervals</li>
+                    <li>• <strong>Forecast Horizon:</strong> 30 hours ahead (CAISO DAM)</li>
+                    <li>• <strong>Historical Window:</strong> Last 24 hours</li>
+                    <li>• <strong>ML Model:</strong> Month-specific (October 2025)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
             <p>
               LADWP Grid Intelligence Dashboard v2.0 | React + TypeScript + FastAPI | 
               Real-time data from CAISO OASIS API
