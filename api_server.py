@@ -29,10 +29,18 @@ app = FastAPI(title="LADWP Grid Intelligence API", version="2.0.0")
 # CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:5173", 
+        "http://localhost:5174", 
+        "http://localhost:5175",
+        "https://*.onrender.com",
+        "https://*.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_origin_regex=r"https://.*\.onrender\.com|https://.*\.vercel\.app",
 )
 
 # Initialize CAISO client
