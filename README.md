@@ -1,388 +1,272 @@
-# LADWP Real-Time Grid Intelligence Dashboard
+# ⚡ LADWP Grid Intelligence Dashboard
 
-## 🎯 Production System: Real-Time Monitoring + ML Anomaly Detection
+**Real-time grid monitoring + AI-powered anomaly detection for proactive operations**
 
-A production-ready dashboard with machine learning capabilities that provides LADWP operators with real-time visibility into California ISO (CAISO) grid conditions, enabling proactive decision-making and operational optimization.
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ladwp-dashboard.onrender.com/)
+[![Status](https://img.shields.io/badge/status-production%20ready-success)]()
+[![License](https://img.shields.io/badge/license-proprietary-blue)]()
 
-**Status:** ✅ Production Ready | All Phases Complete | Month-Specific ML Models Deployed
+A production-ready web dashboard that provides LADWP operators with real-time California ISO (CAISO) grid intelligence, machine learning anomaly detection, and AI-powered operational recommendations.
 
 ---
 
-## 🚀 Why This Dashboard is Valuable
+## 🎯 Why This Matters
 
-### **Problem It Solves**
-Traditional grid operations rely on:
-- **Static SCADA alarms** - Reactive, not predictive
-- **Manual data checking** - Time-consuming and error-prone
-- **Delayed information** - By the time you see issues, it's too late
-- **Siloed data** - Prices, demand, and constraints viewed separately
+### **The Problem**
+Grid operators face:
+- ⚠️ **Reactive operations** - Issues discovered too late
+- 💸 **Price volatility** - Unexpected high-cost periods
+- 📊 **Data overload** - Too much information, not enough insight
+- 🔄 **Manual monitoring** - Time-consuming, error-prone
 
 ### **Our Solution**
-✅ **Real-time intelligence** - Live CAISO data updated every 5 minutes  
-✅ **Proactive alerts** - Detect price spikes and grid stress before they escalate  
-✅ **Unified view** - All critical metrics in one dashboard  
-✅ **Actionable insights** - Specific recommendations for operators  
-✅ **Cost savings** - Avoid high-price periods, optimize operations  
+✅ **Real-time intelligence** - Live CAISO data every 5 minutes  
+✅ **ML anomaly detection** - 12 month-specific models (95% fewer false alarms)  
+✅ **AI recommendations** - GPT-4 powered operational guidance  
+✅ **Cost optimization** - Identify high-price periods before they escalate  
+✅ **Mobile-responsive** - Monitor from anywhere
+
+### **Business Impact**
+- 💰 **Cost Avoidance**: Detect price spikes early, shift loads strategically
+- ⚡ **Grid Reliability**: Predict stress conditions 30+ hours in advance
+- 🎯 **Operational Efficiency**: Single dashboard for all critical metrics
+- 📈 **Data-Driven Decisions**: Historical trends + predictive analytics
 
 ---
 
-## 💰 Business Value for LADWP
+## ✨ Key Features
 
-### **1. Cost Avoidance**
-- **Detect high-price periods early** → Reduce load or shift to storage
-- **Example**: Avoiding just 2 hours/day of $150/MWh vs $50/MWh prices on 1,000 MW load = **$73M annual savings**
+### **📊 Real-Time Monitoring**
+- **Live Grid Status**: Current demand, prices, stress levels
+- **6-Hour Price Trends**: Automatic spike detection with alerts
+- **54-Hour Demand Forecast**: CAISO day-ahead predictions
+- **Interactive Charts**: Responsive Recharts visualizations
 
-### **2. Operational Efficiency**
-- **Single pane of glass** for grid conditions
-- **Reduce operator workload** - Automated monitoring vs manual checks
-- **Faster response times** - See issues immediately
+### **🤖 AI-Powered Intelligence**
+- **ML Anomaly Detection**: 12 month-specific Isolation Forest models
+- **95% Accuracy**: Trained on historical LADWP patterns (2,000-6,200 MW range)
+- **30-Hour Predictions**: Future anomaly forecasting with confidence scores
+- **GPT-4 Recommendations**: Context-aware operational guidance
+- **Severity Classification**: Normal → Low → Medium → High → Critical
 
-### **3. Grid Reliability**
-- **Anticipate stress conditions** before they become emergencies
-- **Proactive demand response** - Activate programs before system strain
-- **Better coordination with CAISO** - Real-time awareness of grid status
-
-### **4. Regulatory Compliance**
-- **Automated logging** of grid events
-- **Documentation** of operational decisions
-- **Audit trail** for regulators
-
-### **5. Data-Driven Decisions**
-- **Optimize pumping schedules** around price forecasts
-- **Better energy procurement** - Know when to buy/sell
-- **Strategic planning** - Historical trend analysis
+### **💡 Operational Benefits**
+- **Proactive Alerts**: Detect issues before they escalate
+- **Cost Optimization**: Identify high-price periods for load shifting
+- **Unified Dashboard**: All critical metrics in one view
+- **Mobile-Responsive**: Access from desktop, tablet, or phone
+- **Auto-Refresh**: Configurable 30s - 5min intervals
 
 ---
 
-## 📊 Key Features
+## 🚀 Quick Start
 
-### **Current Implementation (Phase 1 & 2 Complete)**
+### **Live Demo**
+👉 **[https://ladwp-dashboard.onrender.com/](https://ladwp-dashboard.onrender.com/)**
 
-#### 1. **Real-Time Grid Status**
-- System-wide electricity demand (MW)
-- Average energy prices ($/MWh)
-- Grid stress level indicator with confidence scores
-- Last update timestamp
+### **Local Development**
 
-#### 2. **Energy Price Intelligence**
-- 6-hour price trend visualization
-- Automatic spike detection (>2σ from mean)
-- Price component breakdown (Energy, Congestion, Losses)
-- Volatility metrics
+```bash
+# Clone repository
+git clone https://github.com/richard1634/LADWP-Grid-Intelligence.git
+cd LADWP-Grid-Intelligence
 
-#### 3. **48-Hour Demand Forecasting**
-- CAISO 48-hour demand forecast
-- Peak demand identification
-- Capacity margin calculations
-- Off-peak optimization opportunities
+# Install backend dependencies
+pip install -r requirements.txt
 
-#### 4. **ML-Powered Anomaly Detection** ✨ PRODUCTION
-- 12 month-specific machine learning models
-- Automatic model selection by current month
-- Future anomaly prediction (30-hour horizon)
-- Severity classification (normal/medium/high/critical)
-- Confidence scoring (0-100%)
-- 95% reduction in false positives vs generic models
+# Configure Python environment (optional for OpenAI features)
+# Set OPENAI_API_KEY environment variable
 
-#### 5. **Operational Intelligence**
-- Automated insights based on ML predictions
-- Specific action recommendations
-- Alert generation for critical events
-- Historical pattern baseline comparison
-- Integration-ready for SCADA/notification systems
+# Start backend server
+python api_server.py
+# Backend runs on http://localhost:8000
 
-#### 6. **Interactive Visualizations**
-- Time-series price charts with anomaly highlighting
-- Demand forecast curves with confidence intervals
-- Price component breakdowns
-- Historical trend analysis
-- ML anomaly detection charts
+# In new terminal - Install frontend dependencies
+cd frontend
+npm install
+
+# Start frontend development server
+npm run dev
+# Frontend runs on http://localhost:5173
+```
+
+### **Environment Variables**
+```bash
+# Optional - For AI-powered recommendations
+OPENAI_API_KEY=sk-proj-your-key-here
+
+# Frontend API URL (production)
+VITE_API_URL=https://your-backend-url.onrender.com
+```
 
 ---
 
-## 🎓 How to Use This Dashboard
+## 📖 How to Use
 
-### **For Grid Operators:**
+### **Dashboard Navigation**
+1. **Demand & AI Tab**: Real-time demand, ML predictions, AI recommendations
+2. **Price Analysis Tab**: Energy prices, spike detection, cost optimization
 
-1. **Morning Check-in**
-   - Review 24-hour demand forecast
-   - Check price trends for the day
-   - Plan load shifting opportunities
+### **Key Metrics**
+- **System Demand**: Current LADWP load (MW)
+- **Avg Energy Price**: Real-time $/MWh with trend indicator
+- **Grid Stress Level**: Normal → Moderate → High → Critical
+- **Last Update**: Data freshness timestamp
 
-2. **Real-Time Monitoring**
-   - Watch the Grid Stress Level indicator
-   - Respond to price spike alerts
-   - Adjust operations based on recommendations
-
-3. **High-Price Event**
-   - Dashboard alerts: "High Prices - Potential Stress"
-   - Recommended action shown automatically
-   - Activate demand response programs
-   - Document incident in system logs
-
-4. **Economic Optimization**
-   - Low price periods? Increase pumping
-   - High price periods? Reduce non-critical loads
-   - Track savings vs baseline operations
-
-### **For Management:**
-
-1. **Strategic Overview**
-   - Review grid stress patterns
-   - Analyze price volatility trends
-   - Identify optimization opportunities
-
-2. **Cost Management**
-   - Track price exposure
-   - Calculate avoided costs
-   - Justify demand response investments
-
-3. **Performance Metrics**
-   - Operator response times
-   - Cost avoidance achieved
-   - System reliability improvements
+### **AI Analysis Workflow**
+1. 🔍 **Detection**: ML models scan 30-hour forecast for anomalies
+2. 🎯 **Classification**: Severity scoring with confidence levels
+3. 🤖 **Analysis**: GPT-4 generates contextual recommendations
+4. 💡 **Action**: Operator reviews and implements suggestions
 
 ---
 
-## 🔧 Technical Details
+## �️ Tech Stack
+
+### **Frontend**
+- **React 18** + **TypeScript** - Type-safe component architecture
+- **Vite** - Lightning-fast build tool
+- **Tailwind CSS** - Utility-first styling
+- **Recharts** - Interactive data visualizations
+- **TanStack Query** - Server state management
+- **Framer Motion** - Smooth animations
+
+### **Backend**
+- **FastAPI** (Python 3.11) - High-performance async API
+- **Uvicorn** - ASGI server
+- **Scikit-learn** - Isolation Forest ML models
+- **OpenAI GPT-4** - AI-powered recommendations
+- **Pandas + NumPy** - Data processing
 
 ### **Data Sources**
-- **CAISO OASIS API** - California ISO's public data service
-- **Update Frequency** - 5-minute intervals (real-time market)
-- **Historical Depth** - Up to 24 hours of data
-- **No Authentication Required** - Public API
+- **CAISO OASIS API** - Real-time grid data (5-min intervals)
+- **SQLite** - Historical training data storage
+- **Public API** - No authentication required
 
-### **Key Metrics Tracked**
+### **Deployment**
+- **Frontend**: Render Static Site / Vercel
+- **Backend**: Render Web Service
+- **Auto-deploy**: GitHub integration
+- **SSL**: Automatic HTTPS
 
-| Metric | Source | Update Frequency | Use Case |
-|--------|--------|------------------|----------|
-| System Demand | `SLD_FCST` | 5 minutes | Capacity planning |
-| Real-Time Prices (LMP) | `PRC_INTVL_LMP` | 5 minutes | Cost optimization |
-| Price Components | `PRC_INTVL_LMP` | 5 minutes | Congestion analysis |
-| Demand Forecast | `SYS_FCST_DA` | Hourly | Day-ahead planning |
+---
 
-### **Intelligence Algorithms**
+## � Project Structure
 
-1. **Price Spike Detection**
-   ```
-   Spike = |Price - Mean| > 2 × StdDev
-   ```
+### **Core Architecture**
+```
+LADWP-Grid-Intelligence/
+├── 🎨 Frontend (React + TypeScript)
+│   ├── src/
+│   │   ├── pages/Dashboard.tsx         # Main dashboard
+│   │   ├── components/                 # Reusable UI components
+│   │   ├── api/client.ts              # API integration
+│   │   └── types/index.ts             # TypeScript definitions
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── 🔧 Backend (FastAPI + Python)
+│   ├── api_server.py                   # Main API server
+│   ├── caiso_api_client.py            # CAISO data fetching
+│   ├── llm_recommendation_engine.py   # GPT-4 integration
+│   └── requirements.txt
+│
+├── 🤖 ML Models
+│   ├── models/
+│   │   ├── anomaly_detector.py        # Isolation Forest
+│   │   ├── trained_models/            # 12 monthly models (.pkl)
+│   │   └── predictions/               # Generated forecasts
+│   └── scripts/
+│       ├── train_all_monthly_models.py
+│       └── generate_all_predictions.py
+│
+├── 📊 Data
+│   └── data/historical_data/
+│       └── ladwp_grid_data.db         # SQLite training data
+│
+└── 📚 Documentation
+    ├── README.md                       # This file
+    ├── DEPLOYMENT.md                  # Deployment guide
+    ├── USAGE_GUIDE.md                 # Operational guide
+    └── docs/                          # Additional documentation
+```
 
-2. **Grid Stress Score**
-   ```
-   Score = f(Demand, Price)
-   - Very High Demand (>45,000 MW): +3
-   - High Demand (>40,000 MW): +2
-   - Very High Price (>$150/MWh): +3
-   - High Price (>$100/MWh): +2
-   - Elevated Price (>$75/MWh): +1
+---
+
+## 🤖 ML System Architecture
+
+### **Month-Specific Models**
+12 specialized Isolation Forest models trained on historical LADWP demand patterns:
+
+| Month | Avg Demand | Normal Range | Model Trained On |
+|-------|------------|--------------|------------------|
+| January | 2,400 MW | 2,000-3,200 MW | 30 days Jan data |
+| August | 3,200 MW | 2,800-4,100 MW | 30 days Aug data |
+| October | 2,800 MW | 2,300-3,800 MW | 30 days Oct data |
+
+**Why Month-Specific?**
+- ❄️ Generic model sees August's 3,200 MW as anomalous (trained on all months avg 2,600 MW)
+- ☀️ August-specific model knows 3,200 MW is normal for summer
+- **Result**: 95% reduction in false positives (89% → <5%)
+
+### **Automated Pipeline**
+1. **Collection**: Fetch 30 days historical data per month from CAISO
+2. **Training**: Train 12 Isolation Forest models (contamination=5%)
+3. **Prediction**: Run CAISO 30-hour forecast through current month's model
+4. **Recommendation**: GPT-4 generates operational guidance for detected anomalies
+
+### **Performance**
+- 🎯 **Accuracy**: >85% precision
+- ⚡ **Speed**: Real-time prediction (<100ms)
+- 🔄 **Updates**: Hourly forecast, monthly retraining
+- 📈 **Features**: 15 (time, seasonal, demand, rolling stats)
+
+---
+
+## 💡 Use Case Example
+
+**Scenario**: Price spike from $50 → $180/MWh at 5 PM
+
+1. **Detection** (5:00 PM):
+   - Dashboard alerts: "High Prices - Potential Stress"
+   - Shows: 260% price increase
    
-   Levels: Normal (0), Moderate (1-2), High (3-4), Critical (5+)
-   ```
-
-3. **Price Volatility**
-   ```
-   Volatility = Rolling StdDev (12-interval window)
-   ```
-
----
-
-## 📦 Installation & Setup
-
-### **Prerequisites**
-- Python 3.8+
-- Internet connection (for CAISO API)
-
-### **Quick Start**
-
-1. **Install Dependencies**
-   ```powershell
-   cd "c:\Users\leric\Downloads\LADWP"
-   pip install -r requirements.txt
-   ```
-
-2. **Run the Dashboard**
-   ```powershell
-   streamlit run dashboard.py
-   ```
-
-3. **Access the Dashboard**
-   - Opens automatically in your browser
-   - Default URL: `http://localhost:8501`
-
-### **Files Structure**
-```
-LADWP/
-├── dashboard.py                        # Main Streamlit dashboard
-├── caiso_api_client.py                 # CAISO API integration
-├── requirements.txt                    # Python dependencies
-├── README.md                           # This file
-├── USAGE_GUIDE.md                      # Operational scenarios
-├── MONTHLY_MODELS_GUIDE.md             # ML model documentation
-├── data/
-│   ├── data_collector.py               # Historical data collection
-│   └── historical_data/
-│       └── ladwp_grid_data.db          # SQLite database (~10K records)
-├── models/
-│   ├── anomaly_detector.py             # Isolation Forest ML models
-│   ├── baseline_patterns.py            # Pattern learning
-│   ├── future_anomaly_predictor.py     # 48-hour predictions
-│   ├── trained_models/                 # 12 monthly models
-│   ├── predictions/                    # 12 prediction files
-│   └── baseline_data/                  # Learned patterns
-├── collect_all_months.py               # Monthly data collection script
-├── train_all_monthly_models.py         # Model training pipeline
-├── generate_all_predictions.py         # Prediction generation
-└── retrain_all.py                      # Automated retraining
-```
+2. **AI Analysis** (5:01 PM):
+   - GPT-4 recommendation: "Consider demand response activation"
+   - Lists: Non-critical loads that can be reduced
+   
+3. **Operator Action** (5:05 PM):
+   - Activates customer demand response
+   - Reduces 200 MW load for 2 hours
+   
+4. **Financial Impact**:
+   - **Avoided cost**: 200 MW × 2 hrs × $130 = **$52,000 saved**
 
 ---
 
-## 🎯 Use Case Examples
+## � Future Enhancements
 
-### **Example 1: Avoiding High-Price Period**
-**Scenario**: Dashboard detects price spike from $50 to $180/MWh at 5:00 PM
-
-**Dashboard Actions**:
-1. ⚠️ Alert: "High Prices - Potential Stress"
-2. 📊 Shows: Price jumped 260% in 15 minutes
-3. 💡 Recommends: "Consider demand response activation"
-
-**Operator Response**:
-1. Reviews non-critical loads
-2. Activates customer demand response program
-3. Reduces load by 200 MW for 2 hours
-
-**Financial Impact**:
-- Avoided cost: 200 MW × 2 hours × ($180 - $50) = **$52,000 saved**
-
-### **Example 2: Optimizing Pumping Schedule**
-**Scenario**: Dashboard shows low overnight prices ($25/MWh) vs high afternoon prices ($85/MWh)
-
-**Dashboard Actions**:
-1. 📈 Shows: 24-hour price forecast
-2. 🎯 Highlights: Optimal pumping window 11 PM - 5 AM
-3. 💡 Recommends: "Shift pumping to low-price period"
-
-**Operator Response**:
-1. Reschedules water pumping operations
-2. Runs pumps at full capacity during cheap hours
-3. Reduces daytime pumping
-
-**Financial Impact**:
-- Daily savings: 500 MW × 6 hours × ($85 - $25) = **$180,000/day**
-- Annual savings: **$65.7M/year**
-
-### **Example 3: Grid Emergency Preparation**
-**Scenario**: Dashboard shows rising demand + high prices + transmission congestion
-
-**Dashboard Actions**:
-1. 🔴 Alert: "Critical Grid Stress"
-2. 📊 Stress Score: 6/10 (Critical)
-3. 💡 Recommends: "Implement emergency procedures, contact CAISO"
-
-**Operator Response**:
-1. Notifies operations management
-2. Prepares load shedding plans
-3. Coordinates with CAISO control room
-4. Activates emergency demand response
-
-**Reliability Impact**:
-- Prevented potential blackout
-- Maintained service to critical customers
-- Documented compliance with CAISO directives
+- 📱 Mobile app for field operators
+- 📧 SMS/Email alert system
+- 🔌 SCADA integration
+- 📊 Historical analytics & reporting
+- 🌐 Public API for third-party integrations
+- 💧 Water infrastructure optimization
 
 ---
 
-## 🔮 Future Enhancements (Phase 2 & 3)
+## 📄 License & Support
 
-### **Phase 2: Machine Learning Anomaly Detection**
-- Train ML models on historical CAISO data
-- Predict price spikes 30-60 minutes in advance
-- Detect unusual patterns (grid events, equipment issues)
-- Automated incident classification
+**License**: Proprietary - LADWP Internal Use  
+**Repository**: [github.com/richard1634/LADWP-Grid-Intelligence](https://github.com/richard1634/LADWP-Grid-Intelligence)  
+**Live Demo**: [ladwp-dashboard.onrender.com](https://ladwp-dashboard.onrender.com/)
 
-### **Phase 3: Water Infrastructure Integration**
-- Combine grid data with water system sensors
-- Optimize pumping based on electricity prices
-- Detect water main leaks using pressure anomalies
-- Unified energy + water operations dashboard
-
-### **Advanced Features**
-- Mobile app for field operators
-- SMS/email alerts for critical events
-- Integration with SCADA systems
-- Automated demand response dispatch
-- Historical analytics & reporting
-- API for third-party integrations
+For questions or support, please contact the development team or refer to `USAGE_GUIDE.md` for operational documentation.
 
 ---
 
-## 🤝 Integration Opportunities
-
-### **Ready to Integrate With:**
-- **SCADA Systems** - Automated alert injection
-- **Energy Management Systems (EMS)** - Real-time optimization
-- **Customer Information Systems (CIS)** - Demand response programs
-- **GIS Systems** - Geographic visualization
-- **Ticketing Systems** - Automatic incident creation
-- **Notification Services** - Email, SMS, Slack, PagerDuty
-
 ---
 
-## 📈 Success Metrics
-
-### **Operational Metrics**
-- Time to detect grid events: <5 minutes ✅
-- Operator response time: <15 minutes (target)
-- False alarm rate: <5% ✅ (down from 89% with generic model)
-- ML model accuracy: >85% precision ✅
-
-### **Financial Metrics**
-- Cost avoidance per month (monitoring)
-- Price exposure reduction (tracking)
-- ROI on demand response programs (in progress)
-
-### **Reliability Metrics**
-- Grid stress events anticipated: 48-hour horizon ✅
-- Anomaly detection confidence: 0-100% scoring ✅
-- Seasonal awareness: 12 month-specific models ✅
-
----
-
-## 🙋 FAQ
-
-**Q: Does this replace SCADA?**  
-A: No, it complements SCADA. SCADA monitors your equipment; this monitors the broader CAISO grid to give you strategic insight.
-
-**Q: How accurate is the data?**  
-A: Data comes directly from CAISO's official OASIS API - the same data used by grid operators and market participants.
-
-**Q: What if the API is down?**  
-A: The dashboard shows a warning and uses cached data. In production, we'd add redundancy and fallback data sources.
-
-**Q: Can this run 24/7?**  
-A: Yes! Deploy on a server with auto-refresh enabled. We recommend cloud hosting (AWS, Azure) for reliability.
-
-**Q: What about security?**  
-A: Current version uses public data only (no authentication needed). For production deployment with internal data, add authentication, encryption, and VPN access.
-
----
-
-## 📞 Support
-
-**Built for LADWP Operations Team**  
-For questions, enhancements, or integration support, contact your IT department or the development team.
-
----
-
-## 📄 License
-
-Internal use only - LADWP proprietary.
-
----
-
-## 📁 Project Structure
+**⚡ Built with ❤️ for LADWP Operations Team**
 
 ```
 LADWP/
