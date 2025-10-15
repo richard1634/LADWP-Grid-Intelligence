@@ -37,7 +37,7 @@ This guide will help you deploy your LADWP dashboard online using various platfo
 5. **Environment Variables** (click "Advanced"):
    ```
    PORT=10000
-   PYTHON_VERSION=3.11.0
+   PYTHON_VERSION=3.11.9
    ```
    
    Optional (if using OpenAI):
