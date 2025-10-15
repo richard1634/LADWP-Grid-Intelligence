@@ -11,6 +11,8 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
 import pytz
+import json
+from pathlib import Path
 from caiso_api_client import (
     CAISOClient, 
     calculate_price_volatility,
@@ -401,215 +403,54 @@ st.markdown("---")
 # ==========================================
 # Show date in header if viewing historical data
 if selected_date < today:
-    st.header(f"� System Demand Forecast - {selected_date.strftime('%A, %B %d, %Y')}")
+    st.header(f"📊 System Demand Forecast - {selected_date.strftime('%A, %B %d, %Y')}")
     st.info(f"📊 Viewing historical forecast from {(today - selected_date).days} day(s) ago")
 else:
-    st.header("� System Demand Forecast - Next 48 Hours")
+    st.header("📊 System Demand Forecast - Next 48 Hours")
     st.info("🔮 Showing CAISO's predictive forecast extending into tomorrow")
 
-if price_df is not None and not price_df.empty:
+if demand_df is not None and not demand_df.empty:
     
     # Check if we have required columns
-    has_timestamp = 'timestamp' in price_df.columns
-    has_price = 'LMP_PRC' in price_df.columns or 'MW' in price_df.columns
+    has_timestamp = 'timestamp' in demand_df.columns
+    has_demand = 'MW' in demand_df.columns
     
     if not has_timestamp:
         # Try to create timestamp from available columns
-        if 'INTERVAL_START_GMT' in price_df.columns:
+        if 'INTERVAL_START_GMT' in demand_df.columns:
             try:
-                price_df['timestamp'] = pd.to_datetime(price_df['INTERVAL_START_GMT'])
-                price_df['timestamp'] = price_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert(pytz.timezone('America/Los_Angeles'))
+                demand_df['timestamp'] = pd.to_datetime(demand_df['INTERVAL_START_GMT'])
+                demand_df['timestamp'] = demand_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert(pytz.timezone('America/Los_Angeles'))
                 has_timestamp = True
             except:
                 pass
-        elif 'INTERVALSTARTTIME_GMT' in price_df.columns:
+        elif 'INTERVALSTARTTIME_GMT' in demand_df.columns:
             try:
-                price_df['timestamp'] = pd.to_datetime(price_df['INTERVALSTARTTIME_GMT'])
-                price_df['timestamp'] = price_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert(pytz.timezone('America/Los_Angeles'))
+                demand_df['timestamp'] = pd.to_datetime(demand_df['INTERVALSTARTTIME_GMT'])
+                demand_df['timestamp'] = demand_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert(pytz.timezone('America/Los_Angeles'))
                 has_timestamp = True
             except:
                 pass
     
-    if not has_timestamp or not has_price:
-        st.warning(f"⚠️ Data structure issue. Available columns: {', '.join(price_df.columns.tolist()[:10])}")
-        st.info(f"💡 Data has {len(price_df)} records but missing required columns for visualization.")
+    if not has_timestamp or not has_demand:
+        st.warning(f"⚠️ Data structure issue. Available columns: {', '.join(demand_df.columns.tolist()[:10])}")
+        st.info(f"💡 Data has {len(demand_df)} records but missing required columns for visualization.")
     else:
-        # Detect price spikes using improved rolling window detection
-        spikes_df = detect_price_spikes(price_df, threshold_std=2.5)
+        # Now showing demand data (no spike detection needed)
         
-        col1, col2 = st.columns([2, 1])
+        col1, col2 = st.columns([3, 1])
         
         with col1:
             # Update subtitle based on viewing mode
             if selected_date < today:
-                st.subheader("Price Trends (Full Day)")
+                st.subheader("Historical 24-Hour Profile")
             else:
-                st.subheader(f"Price Trends (Last {hours_back} Hours)")
+                st.subheader("Forecast: Next 48 Hours")
             
-            # Create interactive price chart with improved styling
+            # Create demand chart
             fig = go.Figure()
             
-            # Filter to selected LADWP-relevant node
-            if 'NODE' in price_df.columns:
-                # Check if selected node exists in data
-                available_nodes_in_data = price_df['NODE'].unique()
-                
-                if selected_price_node in available_nodes_in_data:
-                    node_data = price_df[price_df['NODE'] == selected_price_node].sort_values('timestamp')
-                else:
-                    # Fallback to first available node
-                    node_data = price_df[price_df['NODE'] == available_nodes_in_data[0]].sort_values('timestamp')
-                    selected_price_node = available_nodes_in_data[0]
-                
-                # Single node - plot with LADWP brand colors
-                fig.add_trace(go.Scatter(
-                    x=node_data['timestamp'],
-                    y=node_data['LMP_PRC'],
-                    mode='lines+markers',
-                    name=f'LADWP Area Price',
-                    line=dict(color='#0066CC', width=3),
-                    marker=dict(size=7, color='#003DA5', line=dict(width=1, color='white')),
-                    fill='tozeroy',
-                    fillcolor='rgba(0, 102, 204, 0.12)',
-                    hovertemplate='<b>%{fullData.name}</b><br>Time: %{x|%I:%M %p}<br>Price: $%{y:.2f}/MWh<extra></extra>'
-                ))
-                
-                st.caption(f"📍 {selected_price_node}")
-            else:
-                # No NODE column - plot with LADWP brand colors
-                fig.add_trace(go.Scatter(
-                    x=price_df['timestamp'],
-                    y=price_df['LMP_PRC'],
-                    mode='lines+markers',
-                    name='LADWP Area Price',
-                    line=dict(color='#0066CC', width=3),
-                    marker=dict(size=7, color='#003DA5', line=dict(width=1, color='white')),
-                    fill='tozeroy',
-                    fillcolor='rgba(0, 102, 204, 0.12)'
-                ))
-            
-            # Add spike markers
-            if not spikes_df.empty and 'timestamp' in spikes_df.columns:
-                fig.add_trace(go.Scatter(
-                    x=spikes_df['timestamp'],
-                    y=spikes_df['LMP_PRC'],
-                    mode='markers',
-                    name='Price Spikes',
-                    marker=dict(color='#E63946', size=14, symbol='diamond', line=dict(width=2, color='white')),
-                    hovertemplate='<b>⚠️ SPIKE DETECTED</b><br>' +
-                                  'Time: %{x|%I:%M %p}<br>' +
-                                  'Price: $%{y:.2f}/MWh<extra></extra>'
-                ))
-            
-            # Add typical price range band
-            fig.add_hrect(y0=30, y1=70, 
-                          fillcolor="green", opacity=0.08,
-                          annotation_text="Typical Range", 
-                          annotation_position="right",
-                          annotation=dict(font=dict(size=10, color='rgba(0,128,0,0.5)')))
-            
-            fig.update_layout(
-                xaxis_title="Time (Pacific)",
-                yaxis_title="Price ($/MWh)",
-                hovermode='x unified',
-                height=450,
-                showlegend=True,
-                legend=dict(
-                    orientation="h", 
-                    yanchor="bottom", 
-                    y=1.02, 
-                    xanchor="right", 
-                    x=1,
-                    bgcolor='rgba(255,255,255,0.8)',
-                    bordercolor='rgba(128,128,128,0.3)',
-                    borderwidth=1
-                ),
-                margin=dict(l=20, r=20, t=20, b=40),
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
-                yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
-            )
-            
-            st.plotly_chart(fig, use_container_width=True, key='price_chart')
-        
-        with col2:
-            st.subheader("Price Statistics")
-            
-            if 'LMP_PRC' in price_df.columns:
-                current_price = price_df['LMP_PRC'].iloc[-1]
-                min_price = price_df['LMP_PRC'].min()
-                max_price = price_df['LMP_PRC'].max()
-                avg_price = price_df['LMP_PRC'].mean()
-                volatility = price_df['LMP_PRC'].std()
-                
-                st.metric("Current Price", f"${current_price:.2f}/MWh")
-                st.metric("6-Hour Average", f"${avg_price:.2f}/MWh")
-                st.metric("Min / Max", f"${min_price:.2f} / ${max_price:.2f}")
-                st.metric("Price Volatility (σ)", f"${volatility:.2f}")
-                
-                if not spikes_df.empty:
-                    st.warning(f"⚠️ {len(spikes_df)} price spike(s) detected in last {hours_back}h")
-                else:
-                    st.success("✅ No unusual price spikes detected")
-    
-    # Price component breakdown (if available)
-    if all(col in price_df.columns for col in ['LMP_CONG_PRC', 'LMP_LOSS_PRC', 'LMP_ENE_PRC']):
-        st.subheader("Price Component Breakdown")
-        st.info("""
-        **LMP Components**:
-        - **Energy**: Base cost of electricity generation
-        - **Congestion**: Cost of transmission constraints
-        - **Losses**: Cost of transmission line losses
-        """)
-        
-        latest_prices = price_df.iloc[-1]
-        
-        fig_breakdown = go.Figure(data=[
-            go.Bar(name='Energy', x=['LMP Components'], y=[latest_prices['LMP_ENE_PRC']], marker_color='#003DA5'),
-            go.Bar(name='Congestion', x=['LMP Components'], y=[latest_prices['LMP_CONG_PRC']], marker_color='#0066CC'),
-            go.Bar(name='Losses', x=['LMP Components'], y=[latest_prices['LMP_LOSS_PRC']], marker_color='#00A3E0')
-        ])
-        
-        fig_breakdown.update_layout(
-            barmode='stack',
-            height=300,
-            yaxis_title="Price ($/MWh)",
-            showlegend=True
-        )
-        
-        st.plotly_chart(fig_breakdown, use_container_width=True)
-
-else:
-    st.warning("⚠️ Unable to fetch real-time price data from CAISO API.")
-    st.info("💡 The dashboard will automatically retry on next refresh. Using cached data if available.")
-
-st.markdown("---")
-
-# ==========================================
-# SECTION 3: Real-Time Price Analysis
-# ==========================================
-# Show date in header if viewing historical data
-if selected_date < today:
-    st.header(f"� Energy Prices - {selected_date.strftime('%A, %B %d, %Y')}")
-else:
-    st.header("� Real-Time Energy Prices")
-
-if demand_df is not None and not demand_df.empty:
-    
-    col1, col2 = st.columns([3, 1])
-    
-    with col1:
-        if selected_date < today:
-            st.subheader("Historical 24-Hour Profile")
-        else:
-            st.subheader("Forecast: Next 48 Hours")
-        
-        # Create demand chart
-        fig_demand = go.Figure()
-        
-        if 'MW' in demand_df.columns and 'timestamp' in demand_df.columns:
-            # Filter to LADWP area only
+            # Filter to selected LADWP area
             if 'TAC_AREA_NAME' in demand_df.columns:
                 # Check if selected area exists in data
                 available_areas = demand_df['TAC_AREA_NAME'].unique()
@@ -624,8 +465,6 @@ if demand_df is not None and not demand_df.empty:
                 # If no TAC_AREA_NAME, use all data
                 demand_plot_df = demand_df.copy()
             
-            # CAISO provides forecast data for the full day, not just future
-            # Show all available forecast data (typically current day + next day)
             # Ensure timestamps are timezone-aware for proper display
             if 'timestamp' in demand_plot_df.columns:
                 # Make sure timestamps have timezone info
@@ -661,7 +500,7 @@ if demand_df is not None and not demand_df.empty:
             
             # Plot historical data (solid line) - LADWP Blue
             if not historical_data.empty:
-                fig_demand.add_trace(go.Scatter(
+                fig.add_trace(go.Scatter(
                     x=historical_data['timestamp'],
                     y=historical_data['MW'],
                     mode='lines',
@@ -679,7 +518,7 @@ if demand_df is not None and not demand_df.empty:
                     last_hist = historical_data.iloc[[-1]]
                     forecast_data = pd.concat([last_hist, forecast_data])
                 
-                fig_demand.add_trace(go.Scatter(
+                fig.add_trace(go.Scatter(
                     x=forecast_data['timestamp'],
                     y=forecast_data['MW'],
                     mode='lines',
@@ -696,7 +535,7 @@ if demand_df is not None and not demand_df.empty:
                 peak_time = area_data.loc[peak_idx, 'timestamp']
                 peak_demand = area_data.loc[peak_idx, 'MW']
                 
-                fig_demand.add_trace(go.Scatter(
+                fig.add_trace(go.Scatter(
                     x=[peak_time],
                     y=[peak_demand],
                     mode='markers+text',
@@ -707,45 +546,403 @@ if demand_df is not None and not demand_df.empty:
                     textfont=dict(color='#002B73', size=12, family='Arial Black'),
                     showlegend=False
                 ))
+            
+            fig.update_layout(
+                xaxis_title="Time (Pacific)",
+                yaxis_title="Demand (MW)",
+                hovermode='x unified',
+                height=450,
+                showlegend=True,
+                legend=dict(
+                    orientation="h", 
+                    yanchor="bottom", 
+                    y=1.02, 
+                    xanchor="right", 
+                    x=1,
+                    bgcolor='rgba(255,255,255,0.8)',
+                    bordercolor='rgba(128,128,128,0.3)',
+                    borderwidth=1
+                ),
+                margin=dict(l=20, r=20, t=20, b=40),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
+                yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True, key='demand_chart')
         
-        fig_demand.update_layout(
-            xaxis_title="Time (Pacific)",
-            yaxis_title="Demand (MW)",
-            hovermode='x unified',
-            height=450,
-            showlegend=True,
-            margin=dict(l=20, r=20, t=20, b=40),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
-            yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
-        )
+        with col2:
+            st.subheader("Demand Statistics")
+            
+            if 'MW' in demand_df.columns and 'timestamp' in demand_df.columns:
+                # Get current and forecasted values
+                now = pd.Timestamp.now(tz='America/Los_Angeles')
+                future_data = demand_df[demand_df['timestamp'] >= now]
+                
+                if not future_data.empty:
+                    next_demand = future_data.iloc[0]['MW']
+                    st.metric("Next Hour Forecast", f"{next_demand:,.0f} MW")
+                
+                peak_demand = demand_df['MW'].max()
+                off_peak = demand_df['MW'].min()
+                avg_demand = demand_df['MW'].mean()
+                
+                st.metric("Peak Forecast", f"{peak_demand:,.0f} MW")
+                st.metric("Average", f"{avg_demand:,.0f} MW")
+                st.metric("Off-Peak", f"{off_peak:,.0f} MW")
+                
+                # Calculate variation
+                variation = ((peak_demand - off_peak) / avg_demand) * 100
+                st.metric("Peak Variation", f"{variation:.1f}%")
+
+else:
+    st.warning("⚠️ Unable to fetch demand forecast data from CAISO API.")
+    st.info("💡 The dashboard will automatically retry on next refresh. Using cached data if available.")
+
+st.markdown("---")
+
+# ==========================================
+# SECTION 2.5: ML-Powered Anomaly Detection (Integrated with Demand Forecast)
+# ==========================================
+st.subheader("🤖 AI-Powered Forecast Analysis")
+st.info("Machine learning models analyze the 48-hour demand forecast to detect anomalies and provide recommendations")
+
+# Determine which model to use based on current month
+current_month = datetime.now().month
+month_names = [
+    'january', 'february', 'march', 'april', 'may', 'june',
+    'july', 'august', 'september', 'october', 'november', 'december'
+]
+current_month_name = month_names[current_month - 1]
+
+# Try to load month-specific predictions first
+predictions_file = f"{current_month_name}_predictions.json"
+model_type = f"{current_month_name.capitalize()}-Specific Model"
+
+predictions_path = Path(__file__).parent / "models" / "predictions" / predictions_file
+
+# Fallback to general model if month-specific doesn't exist
+if not predictions_path.exists():
+    predictions_file = "latest_predictions.json"
+    model_type = "General Model"
+    predictions_path = Path(__file__).parent / "models" / "predictions" / predictions_file
+
+if predictions_path.exists():
+    try:
+        with open(predictions_path, 'r') as f:
+            ml_predictions = json.load(f)
         
-        st.plotly_chart(fig_demand, use_container_width=True, key='demand_chart')
+        # Display summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Forecast Points", ml_predictions.get('total_points', 0))
+        
+        with col2:
+            anomaly_count = ml_predictions.get('anomalies_detected', 0)
+            st.metric("Anomalies Detected", anomaly_count)
+        
+        with col3:
+            anomaly_rate = ml_predictions.get('anomaly_rate', 0)
+            st.metric("Anomaly Rate", f"{anomaly_rate:.1f}%")
+        
+        with col4:
+            st.metric("Model Active", model_type)
+        
+        # Convert predictions to DataFrame
+        pred_df = pd.DataFrame(ml_predictions.get('predictions', []))
+        
+        if not pred_df.empty:
+            pred_df['timestamp'] = pd.to_datetime(pred_df['timestamp'])
+            
+            # Create visualization
+            fig_ml = go.Figure()
+            
+            # Normal points
+            normal_df = pred_df[~pred_df['is_anomaly']]
+            if not normal_df.empty:
+                fig_ml.add_trace(go.Scatter(
+                    x=normal_df['timestamp'],
+                    y=normal_df['demand_mw'],
+                    mode='lines+markers',
+                    name='Normal Forecast',
+                    line=dict(color='#00A3E0', width=2),
+                    marker=dict(size=6, color='#00A3E0'),
+                    hovertemplate='<b>Normal</b><br>Time: %{x|%I:%M %p}<br>Demand: %{y:.0f} MW<extra></extra>'
+                ))
+            
+            # Anomalous points by severity
+            severity_colors = {
+                'critical': '#E63946',
+                'high': '#FF9500',
+                'medium': '#FFD60A'
+            }
+            
+            for severity, color in severity_colors.items():
+                severity_df = pred_df[(pred_df['is_anomaly']) & (pred_df['severity'] == severity)]
+                if not severity_df.empty:
+                    fig_ml.add_trace(go.Scatter(
+                        x=severity_df['timestamp'],
+                        y=severity_df['demand_mw'],
+                        mode='markers',
+                        name=f'{severity.capitalize()} Anomaly',
+                        marker=dict(
+                            size=15,
+                            color=color,
+                            symbol='diamond',
+                            line=dict(color='white', width=2)
+                        ),
+                        hovertemplate=f'<b>⚠️ {severity.upper()}</b><br>Time: %{{x|%I:%M %p}}<br>Demand: %{{y:.0f}} MW<br>Confidence: %{{customdata:.1f}}%<extra></extra>',
+                        customdata=severity_df['confidence']
+                    ))
+            
+            fig_ml.update_layout(
+                xaxis_title="Time (Pacific)",
+                yaxis_title="Demand (MW)",
+                hovermode='x unified',
+                height=400,
+                showlegend=True,
+                margin=dict(l=20, r=20, t=20, b=40),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
+                yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
+            )
+            
+            st.plotly_chart(fig_ml, use_container_width=True, key='ml_anomaly_chart')
+            
+            # Show anomaly details if any detected
+            anomalies_df = pred_df[pred_df['is_anomaly']].sort_values('confidence', ascending=False)
+            
+            if not anomalies_df.empty:
+                st.markdown(f"**🚨 Detected Anomalies ({len(anomalies_df)})**")
+                
+                for idx, row in anomalies_df.head(5).iterrows():
+                    severity_emoji = {'critical': '🔴', 'high': '🟠', 'medium': '🟡'}.get(row['severity'], '⚪')
+                    time_str = row['timestamp'].strftime('%a %I:%M %p')
+                    
+                    with st.expander(f"{severity_emoji} {time_str} - {row['demand_mw']:.0f} MW ({row['severity'].upper()})"):
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.write(f"**Confidence:** {row['confidence']:.1f}%")
+                            st.write(f"**Severity:** {row['severity'].capitalize()}")
+                        with col2:
+                            st.write(f"**Demand:** {row['demand_mw']:.0f} MW")
+                            st.write(f"**Timestamp:** {row['timestamp']}")
+            else:
+                st.success("✅ No anomalies detected - all forecasts appear normal")
+        
+        # Model info footer
+        st.caption(f"🤖 Model: {model_type} | Last updated: {ml_predictions.get('generated_at', 'Unknown')}")
     
-    with col2:
-        st.subheader("Demand Statistics")
+    except Exception as e:
+        st.error(f"Error loading ML predictions: {e}")
+else:
+    st.info(f"⚠️ ML predictions not available for {current_month_name.capitalize()}.")
+
+# ==========================================
+# SECTION 2.6: Smart Recommendations (Integrated)
+# ==========================================
+st.markdown("### 💡 Smart Recommendations")
+
+# Load anomaly-based recommendations for the current month
+recommendations_file = f'data/{current_month_name}_anomaly_recommendations.json'
+if Path(recommendations_file).exists():
+    try:
+        with open(recommendations_file, 'r') as f:
+            rec_data = json.load(f)
         
-        if 'MW' in demand_df.columns and 'timestamp' in demand_df.columns:
-            # Get current and forecasted values
-            now = pd.Timestamp.now(tz='America/Los_Angeles')
-            future_data = demand_df[demand_df['timestamp'] >= now]
+        recommendations = rec_data.get('recommendations', [])
+        
+        if recommendations:
+            # Summary metrics
+            col1, col2, col3 = st.columns(3)
             
-            if not future_data.empty:
-                next_demand = future_data.iloc[0]['MW']
-                st.metric("Next Hour Forecast", f"{next_demand:,.0f} MW")
+            with col1:
+                st.metric("Total Recommendations", rec_data.get('total_anomalies', len(recommendations)))
             
-            peak_demand = demand_df['MW'].max()
-            off_peak = demand_df['MW'].min()
-            avg_demand = demand_df['MW'].mean()
+            with col2:
+                high_priority = rec_data.get('high_priority', 0)
+                st.metric("High Priority", high_priority)
             
-            st.metric("Peak Forecast", f"{peak_demand:,.0f} MW")
-            st.metric("Average", f"{avg_demand:,.0f} MW")
-            st.metric("Off-Peak", f"{off_peak:,.0f} MW")
+            with col3:
+                medium_priority = rec_data.get('medium_priority', 0)
+                st.metric("Medium Priority", medium_priority)
             
-            # Calculate variation
-            variation = ((peak_demand - off_peak) / avg_demand) * 100
-            st.metric("Peak Variation", f"{variation:.1f}%")
+            # Display top 3 recommendations
+            for i, item in enumerate(recommendations[:3], 1):
+                anomaly = item['anomaly']
+                rec = item['recommendation']
+                
+                priority_emoji = {'HIGH': '🔴', 'MEDIUM': '🟡', 'LOW': '🟢'}.get(rec['priority'], '⚪')
+                
+                with st.expander(f"{priority_emoji} {anomaly['time_str']} | {rec['title']}", expanded=(i == 1)):
+                    st.markdown(f"**Priority:** {rec['priority']} | **Urgency:** {rec['urgency']}")
+                    st.markdown("**Analysis:**")
+                    st.write(rec['why'])
+                    st.markdown("**Actions:**")
+                    for j, action in enumerate(rec['actions'][:3], 1):
+                        st.write(f"{action['icon']} **{j}.** {action['action']}")
+                        st.caption(f"   {action['details']}")
+        else:
+            st.info("No recommendations available - system operating normally")
+    
+    except Exception as e:
+        st.error(f"Error loading recommendations: {e}")
+else:
+    st.info(f"No recommendations available for {current_month_name.capitalize()}")
+
+st.markdown("---")
+
+# ==========================================
+# SECTION 3: Real-Time Price Analysis
+# ==========================================
+# Show date in header if viewing historical data
+if selected_date < today:
+    st.header(f"💰 Real-Time Energy Prices - {selected_date.strftime('%A, %B %d, %Y')}")
+    st.info(f"📊 Viewing historical prices from {(today - selected_date).days} day(s) ago")
+else:
+    st.header("💰 Real-Time Energy Prices")
+    st.info("🔮 Showing CAISO's real-time and forecasted pricing")
+
+if price_df is not None and not price_df.empty:
+    
+    # Check if we have required columns
+    has_timestamp = 'timestamp' in price_df.columns
+    has_price = 'LMP_PRC' in price_df.columns
+    
+    if not has_timestamp or not has_price:
+        st.warning(f"⚠️ Data structure issue. Available columns: {', '.join(price_df.columns.tolist()[:10])}")
+        st.info(f"💡 Data has {len(price_df)} records but missing required columns for visualization.")
+    else:
+        # Detect price spikes
+        spikes_df = detect_price_spikes(price_df, threshold_std=2.5)
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            if selected_date < today:
+                st.subheader("Price Trends (Full Day)")
+            else:
+                st.subheader(f"Price Trends (Last {hours_back} Hours)")
+            
+            # Create price chart
+            fig_price = go.Figure()
+            
+            if 'NODE' in price_df.columns and has_price:
+                # Get unique nodes for the selected price zone
+                unique_nodes = price_df['NODE'].unique()
+                
+                # If we have a selected node, use it; otherwise use the first available node
+                if selected_price_node in unique_nodes:
+                    node_to_display = selected_price_node
+                else:
+                    node_to_display = unique_nodes[0] if len(unique_nodes) > 0 else None
+                
+                if node_to_display:
+                    # Filter for selected node
+                    node_data = price_df[price_df['NODE'] == node_to_display].copy()
+                    
+                    if not node_data.empty:
+                        # Sort by timestamp
+                        node_data = node_data.sort_values('timestamp')
+                        
+                        # Add price line
+                        fig_price.add_trace(go.Scatter(
+                            x=node_data['timestamp'],
+                            y=node_data['LMP_PRC'],
+                            mode='lines+markers',
+                            name='LMP Price',
+                            line=dict(color='#003f5c', width=2),
+                            marker=dict(size=4),
+                            hovertemplate='<b>Time:</b> %{x|%Y-%m-%d %H:%M}<br>' +
+                                         '<b>Price:</b> $%{y:.2f}/MWh<br>' +
+                                         '<extra></extra>'
+                        ))
+                        
+                        # Add price spikes if any
+                        if not spikes_df.empty:
+                            spike_data = spikes_df[spikes_df['NODE'] == node_to_display]
+                            if not spike_data.empty:
+                                fig_price.add_trace(go.Scatter(
+                                    x=spike_data['timestamp'],
+                                    y=spike_data['LMP_PRC'],
+                                    mode='markers',
+                                    name='Price Spike',
+                                    marker=dict(
+                                        color='red',
+                                        size=10,
+                                        symbol='diamond',
+                                        line=dict(color='darkred', width=1)
+                                    ),
+                                    hovertemplate='<b>⚠️ Price Spike</b><br>' +
+                                                 'Time: %{x|%Y-%m-%d %H:%M}<br>' +
+                                                 'Price: $%{y:.2f}/MWh<br>' +
+                                                 '<extra></extra>'
+                                ))
+                        
+                        # Add typical price range bands
+                        mean_price = node_data['LMP_PRC'].mean()
+                        std_price = node_data['LMP_PRC'].std()
+                        
+                        # Add shaded region for typical range (mean ± 1 std)
+                        fig_price.add_hrect(
+                            y0=mean_price - std_price,
+                            y1=mean_price + std_price,
+                            fillcolor="rgba(0, 128, 0, 0.1)",
+                            line_width=0,
+                            annotation_text="Typical Range",
+                            annotation_position="top left"
+                        )
+            
+            fig_price.update_layout(
+                xaxis_title="Time",
+                yaxis_title="Price ($/MWh)",
+                hovermode='x unified',
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
+                yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            )
+            
+            st.plotly_chart(fig_price, use_container_width=True, key='price_chart')
+    
+        with col2:
+            st.subheader("Price Statistics")
+            
+            if has_price and has_timestamp:
+                # Current price
+                current_time = datetime.now(pytz.timezone('America/Los_Angeles'))
+                recent_data = price_df[price_df['timestamp'] <= current_time]
+                
+                if not recent_data.empty:
+                    current_price = recent_data.iloc[-1]['LMP_PRC']
+                    st.metric("Current Price", f"${current_price:.2f}/MWh")
+                
+                # 6-hour average
+                six_hours_ago = current_time - pd.Timedelta(hours=6)
+                recent_6h = price_df[price_df['timestamp'] >= six_hours_ago]
+                if not recent_6h.empty:
+                    avg_6h = recent_6h['LMP_PRC'].mean()
+                    st.metric("6-Hour Average", f"${avg_6h:.2f}/MWh")
+                
+                # Price range
+                min_price = price_df['LMP_PRC'].min()
+                max_price = price_df['LMP_PRC'].max()
+                st.metric("Min Price", f"${min_price:.2f}/MWh")
+                st.metric("Max Price", f"${max_price:.2f}/MWh")
+                
+                # Price volatility
+                price_std = price_df['LMP_PRC'].std()
+                st.metric("Price Volatility", f"${price_std:.2f}/MWh")
+                
+                # Spike warning
+                if not spikes_df.empty:
+                    st.warning(f"⚠️ {len(spikes_df)} price spikes detected")
+                else:
+                    st.success("✓ No unusual price spikes")
 
 else:
     st.warning("⚠️ Unable to fetch demand forecast data. Dashboard will retry on next refresh.")
