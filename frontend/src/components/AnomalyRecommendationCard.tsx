@@ -163,6 +163,7 @@ export function AnomalyRecommendationCard({
 
           {/* AI Analysis Button */}
           <button
+            data-anomaly-generate-btn
             onClick={handleGenerateRecommendation}
             disabled={loading}
             className={`

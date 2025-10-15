@@ -38,10 +38,10 @@ export function AnomalyRecommendations({ anomalies }: AnomalyRecommendationsProp
     // Trigger generation for all anomalies sequentially
     for (let i = 0; i < anomalies.length; i++) {
       try {
-        // This will trigger each card's button
-        const cards = document.querySelectorAll('[data-generate-btn]');
-        if (cards[i]) {
-          (cards[i] as HTMLButtonElement).click();
+        // Click the button for this anomaly card
+        const buttons = document.querySelectorAll('[data-anomaly-generate-btn]');
+        if (buttons[i]) {
+          (buttons[i] as HTMLButtonElement).click();
           setGeneratedCount(i + 1);
           // Wait a bit between requests to avoid overwhelming the API
           await new Promise(resolve => setTimeout(resolve, 2000));
