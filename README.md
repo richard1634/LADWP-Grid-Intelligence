@@ -2,6 +2,8 @@
 
 **Real-time grid monitoring + AI-powered anomaly detection for proactive operations**
 
+## 🚀 [**Live Demo →**](https://ladwp-dashboard.onrender.com/)
+
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ladwp-dashboard.onrender.com/)
 [![Status](https://img.shields.io/badge/status-production%20ready-success)]()
 [![License](https://img.shields.io/badge/license-proprietary-blue)]()

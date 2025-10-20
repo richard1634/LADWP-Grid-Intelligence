@@ -1,0 +1,24 @@
+services:
+  # Backend API Service
+  - type: web
+    name: ladwp-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api_server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: PORT
+        value: 10000
+
+  # Frontend Static Site
+  - type: web
+    name: ladwp-dashboard
+    runtime: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false  # You'll set this manually after backend deploys
